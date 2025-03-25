@@ -1,0 +1,10 @@
+<form class="form-inline" (ngSubmit)="onSubmit()">
+  <div class="form-floating mx-2">
+    <input type="text" id="searchBar" name="searchBar" class="form-control" placeholder="Introduce un título..." [(ngModel)]="searchTitle"/>
+    <label for="searchBar">Introduce un título...</label>
+  </div>
+  <button type="submit" class="btn btn-info">
+    <img src="./icons/search.svg" alt="Enviar consulta"/>
+  </button>
+</form>
+  

@@ -1,8 +1,10 @@
 import { Component } from '@angular/core';
+import { SearchComponent } from "../search/search.component";
 
 @Component({
   selector: 'app-header',
-  imports: [],
+  imports: [SearchComponent],
+  standalone: true,
   templateUrl: './header.component.html',
   styleUrl: './header.component.css'
 })
