@@ -1,4 +1,5 @@
 <app-header/>
 <main>
-  
+  <!-- <app-results [searchResults]="searchResultsData"/> -->
+  <router-outlet (activate)="onOutletLoaded($event)"/>
 </main>

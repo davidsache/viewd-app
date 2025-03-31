@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { SearchComponent } from "../search/search.component";
 
 @Component({
@@ -8,6 +8,4 @@ import { SearchComponent } from "../search/search.component";
   templateUrl: './header.component.html',
   styleUrl: './header.component.css'
 })
-export class HeaderComponent {
-
-}
+export class HeaderComponent {}

@@ -1,6 +1,6 @@
-import { Component, DestroyRef, inject, signal } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { MoviesService } from '../movies.service';
+import { SearchService } from './search.service';
 
 @Component({
   selector: 'app-search',
@@ -10,15 +10,10 @@ import { MoviesService } from '../movies.service';
   styleUrl: './search.component.css'
 })
 export class SearchComponent {
-  searchTitle = signal('');
-  private destroyRef = inject(DestroyRef);
-  private moviesService = inject(MoviesService);
+  searchTitle = '';
+  private searchService = inject(SearchService);
 
   onSubmit() {
-    const subscription = this.moviesService.searchByTitle(this.searchTitle()).subscribe(
-      movies => console.log(movies)
-    )
-
-    this.destroyRef.onDestroy(() => subscription.unsubscribe());
+    this.searchService.searchByTitle(this.searchTitle);
   }
 }
