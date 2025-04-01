@@ -1,5 +1,5 @@
-import { Component, DestroyRef, inject, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { SearchResults } from './models/search-results.model';
+import { Component, DestroyRef, inject, Input, OnInit } from '@angular/core';
+import { SearchResults } from '../models/search-results.model';
 import { SearchService } from '../search/search.service';
 
 @Component({

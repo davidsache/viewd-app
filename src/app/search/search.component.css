@@ -3,3 +3,7 @@
   flex-flow: row wrap;
   align-items: center;
 }
+
+select {
+  min-width: 160px
+}

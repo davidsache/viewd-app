@@ -1,9 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { DestroyRef, inject, Injectable } from '@angular/core';
-import { Result } from '../results/models/result.model'
-import { SearchResults } from '../results/models/search-results.model';
+import { Result } from '../models/result.model'
+import { SearchResults } from '../models/search-results.model';
 import { BehaviorSubject } from 'rxjs';
 import { Router } from '@angular/router';
+import { SearchParams } from '../models/search-params';
 
 @Injectable({
   providedIn: 'root'
@@ -21,11 +22,20 @@ export class SearchService {
 
   /**
    * Does a search using the title, and returns the results to the components subscribed to it.
-   * @param title Title of the movie/show.
+   * @param params Search parameters.
    */
-  searchByTitle(title: string) {
-    const subscription = this.httpClient.get<SearchResults>('http://www.omdbapi.com/?apikey=8148b372&s=' + title + '&page=1')
-      .subscribe(searchResults => this.searchResultsUpdated(searchResults, title));
+  search(params: SearchParams) {
+    let searchUrl = 'http://www.omdbapi.com/?apikey=8148b372&s=' + params.title;
+
+    if (params.type !== 'none')
+      searchUrl += '&type=' + params.type;
+
+    if (params.year !== '')
+      searchUrl += '&y=' + params.year
+
+    const subscription = this.httpClient.get<SearchResults>(searchUrl + '&page=1').subscribe(
+      searchResults => this.searchResultsUpdated(searchResults, params.title)
+    );
 
     this.destroyRef.onDestroy(() => subscription.unsubscribe());
   }

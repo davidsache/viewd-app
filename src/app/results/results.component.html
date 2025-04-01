@@ -5,7 +5,11 @@
       <div class="row">
         @for (searchResult of searchResults.Search; track searchResult.imdbID; let counter = $index) {
           <div class="col-md-4 text-center cursor" (click)="loadResult(searchResult.imdbID)">
-            <img class="rounded my-2" [src]="searchResult.Poster" [alt]="'Poster de ' + searchResult.Title"/>
+            <img 
+              class="rounded my-2" 
+              [src]="searchResult.Poster !== 'N/A' ? searchResult.Poster : './no-image.png'" 
+              [alt]="'Poster de ' + searchResult.Title"
+            />
             <p class="fs-5 text-truncate">
               {{ searchResult.Title + ' (' + searchResult.Year + ')' }}
             </p>

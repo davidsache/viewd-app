@@ -4,7 +4,11 @@
       <div class="row">
         <div class="col-sm">
           <a [href]="result.Poster" target="_blank">
-            <img class="rounded" [src]="result.Poster" [alt]="'Poster de ' + result.Title"/>
+            <img 
+              class="rounded" 
+              [src]="result.Poster !== 'N/A' ? result.Poster : './no-image.png'" 
+              [alt]="'Poster de ' + result.Title"
+            />
           </a>
         </div>
         <div class="col-md-8">
