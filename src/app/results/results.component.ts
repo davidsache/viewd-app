@@ -1,21 +1,27 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, DestroyRef, inject, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { SearchResults } from './models/search-results.model';
+import { SearchService } from '../search/search.service';
 
 @Component({
   selector: 'app-results',
-  imports: [],
   standalone: true,
   templateUrl: './results.component.html',
   styleUrl: './results.component.css'
 })
-export class ResultsComponent implements OnChanges {
+export class ResultsComponent implements OnInit {
   @Input({ required: true }) searchResults!: SearchResults;
+  private searchService = inject(SearchService);
+  private destroyRef = inject(DestroyRef);
 
   ngOnInit() {
-    console.log(this.searchResults)
+    const searchSubscription = this.searchService.searchData$.subscribe(
+      searchData => this.searchResults = searchData
+    );
+
+    this.destroyRef.onDestroy(() => searchSubscription.unsubscribe);
   }
 
-  ngOnChanges(changes: SimpleChanges) {
-    console.log(this.searchResults)
+  loadResult(id: string) {
+    this.searchService.getByImdbId(id);
   }
 }
