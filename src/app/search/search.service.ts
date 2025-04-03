@@ -10,6 +10,8 @@ import { SearchParams } from '../models/search-params';
   providedIn: 'root'
 })
 export class SearchService {
+  private readonly API_KEY = '8148b372';
+
   private httpClient = inject(HttpClient);
   private destroyRef = inject(DestroyRef);
   private router = inject(Router);
@@ -20,54 +22,85 @@ export class SearchService {
   private resultData = new BehaviorSubject<Result>({} as any);
   resultData$ = this.resultData.asObservable();
 
+  private currentSearchUrl = '';
+  private currentSearchTitle = '';
+  private currentSearchPage = 1;
+
   /**
-   * Does a search using the title, and returns the results to the components subscribed to it.
+   * Constructs the URL to do a search.
    * @param params Search parameters.
    */
-  search(params: SearchParams) {
-    let searchUrl = 'http://www.omdbapi.com/?apikey=8148b372&s=' + params.title;
+  newSearch(params: SearchParams) {
+    this.currentSearchTitle = params.title;
+    this.currentSearchUrl = 'http://www.omdbapi.com/?apikey=' + this.API_KEY + '&s=' + this.currentSearchTitle;
+    this.currentSearchPage = 1;
 
     if (params.type !== 'none')
-      searchUrl += '&type=' + params.type;
+      this.currentSearchUrl += '&type=' + params.type;
 
     if (params.year !== '')
-      searchUrl += '&y=' + params.year
+      this.currentSearchUrl += '&y=' + params.year;
 
-    const subscription = this.httpClient.get<SearchResults>(searchUrl + '&page=1').subscribe(
-      searchResults => this.searchResultsUpdated(searchResults, params.title)
+    this.currentSearchUrl += '&page=1'; 
+    this.searchRequest();
+  }
+
+  /**
+   * Fetch data of the specified page (each page means it's going to fetch the next 10 results).
+   * @param page Number of the page.
+   */
+  changeSearchPage(page: number) {
+    if (this.currentSearchUrl !== '') {
+      this.currentSearchPage = page;
+      this.currentSearchUrl = this.currentSearchUrl.split('&page=')[0] + '&page=' + page.toString();
+      this.searchRequest();
+    }
+  }
+
+  /**
+   * Sends the search results to whomever is subscribed (ResultsComponent), and navigates to ResultsComponent.
+   * @param newSearchResults Object with the result of the search.
+   */
+  private searchResultsUpdated(newSearchResults: SearchResults) {
+    newSearchResults.SearchTitle = this.currentSearchTitle;
+    newSearchResults.CurrentPage = this.currentSearchPage;
+    
+    this.searchData.next(newSearchResults);
+    this.router.navigate(['search']);
+  }
+
+  /**
+   * Sends the content result to whomever is subscribed (ResultItemComponent), and navigates to ResultItemComponent.
+   * @param newResult Object with the info of the result.
+   */
+  private resultUpdated(newResult: Result) {
+    this.resultData.next(newResult);
+    this.router.navigate(['result']);
+  }
+
+  /**
+   * Constructs an URL to get content using by its IMDb id, does an GET request, and returns the result to the 
+   * components subscribed to it.
+   * @param id IMDb id of the content.
+   */
+  getByImdbId(id: string) {
+    const contentUrl = 'http://www.omdbapi.com/?apikey=' + this.API_KEY + '&i=' + id + '&plot=full';
+
+    const subscription = this.httpClient.get<Result>(contentUrl).subscribe(
+      result => this.resultUpdated(result)
     );
 
     this.destroyRef.onDestroy(() => subscription.unsubscribe());
   }
 
   /**
-   * Gets a movie/show using its Imdb ID, and returns the result to the components subscribed to it.
-   * @param id Imdb ID of the movie/show.
+   * GET request to fetch the search results, and returns the results to the components subscribed to it
    */
-  getByImdbId(id: string) {
-    const subscription = this.httpClient.get<Result>('http://www.omdbapi.com/?apikey=8148b372&i=' + id + '&plot=full')
-      .subscribe(result => this.resultUpdated(result));
+  private searchRequest() {
+    const subscription = this.httpClient.get<SearchResults>(this.currentSearchUrl).subscribe(
+      searchResults => this.searchResultsUpdated(searchResults)
+    );
 
     this.destroyRef.onDestroy(() => subscription.unsubscribe());
-  }
-
-  /**
-   * Sends the search results to whomever is subscribed (ResultsComponent), and navigates to ResultsComponent.
-   * @param newSearchResults Object with the result of the search.
-   * @param searchTitle Title of what was searched.
-   */
-  private searchResultsUpdated(newSearchResults: SearchResults, searchTitle: string) {
-    newSearchResults.SearchTitle = searchTitle;
-    this.searchData.next(newSearchResults);
-    this.router.navigate(['search']);
-  }
-
-  /**
-   * Sends the movie/show result to whomever is subscribed (ResultItemComponent), and navigates to ResultItemComponent.
-   * @param newResult Object with the info of the result.
-   */
-  private resultUpdated(newResult: Result) {
-    this.resultData.next(newResult);
-    this.router.navigate(['result']);
   }
 }

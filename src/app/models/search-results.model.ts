@@ -8,5 +8,6 @@ export interface SearchResults {
     Poster: string
   }[],
   totalResults: string,
-  SearchTitle: string
+  SearchTitle: string,
+  CurrentPage: number
 }

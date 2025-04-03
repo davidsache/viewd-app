@@ -1,10 +1,11 @@
 import { Component, DestroyRef, inject, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { Result } from '../../models/result.model';
 import { SearchService } from '../../search/search.service';
+import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'app-result-item',
-  imports: [],
+  imports: [NgClass],
   templateUrl: './result-item.component.html',
   styleUrl: './result-item.component.css'
 })
@@ -12,7 +13,7 @@ export class ResultItemComponent implements OnChanges {
   private searchService = inject(SearchService);
   private destroyRef = inject(DestroyRef);
   @Input({ required: true }) result!: Result;
-  tab =  0;
+  tab: 'cast' | 'details' | 'off' = 'off';
   
   ngOnInit() {
     const resultSubscription = this.searchService.resultData$.subscribe(
@@ -22,15 +23,24 @@ export class ResultItemComponent implements OnChanges {
     this.destroyRef.onDestroy(() => resultSubscription.unsubscribe());
   }
 
+  /**
+   * When there is a change in the page, reset the tab to off.
+   * @param changes Changes object.
+   */
   ngOnChanges(changes: SimpleChanges) {
-    this.tab = 0; 
+    this.tabStatus('off');
   }
 
-  showCastTab() {
-    this.tab = 1;
-  }
-
-  showDetailsTab() {
-    this.tab = 2;
+  /**
+   * Change the info tab status.
+   * @param status 'cast': Show tab with the cast info / 'details': Shows tab with info about the content / 'off': Hides the tab completely.
+   */
+  tabStatus(status: 'cast' | 'details' | 'off') {
+    if (this.tab === status) {
+      this.tab = 'off';
+    }
+    else {
+      this.tab = status;
+    }
   }
 }

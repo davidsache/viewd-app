@@ -1,16 +1,36 @@
-<form class="form-inline" (ngSubmit)="onSubmit()">
+<form class="form-inline needs-validation" (ngSubmit)="onSubmit()">
   <div class="form-floating mx-2">
-    <input type="text" id="searchBar" name="searchBar" class="form-control" placeholder="Introduce un título..." [(ngModel)]="searchTitle"/>
-    <label for="searchBar">Introduce un título...</label>
+    <input 
+      type="text" 
+      id="searchTitle" 
+      name="searchTitle" 
+      class="form-control border border-info" 
+      placeholder="Introduce un título..." 
+      [(ngModel)]="searchTitle"
+    />
+    <label for="searchTitle">Introduce un título...</label>
   </div>
   @if (showSortOptions) {
     <div class="form-floating mx-2">
-      <input id="searchYear" name="searchYear" class="form-control" placeholder="Introduce año..." [(ngModel)]="searchYear" numbersOnly/>
+      <input 
+        id="searchYear" 
+        name="searchYear" 
+        class="form-control border border-info" 
+        placeholder="Introduce año..." 
+        [(ngModel)]="searchYear" 
+        numbersOnly
+      />
       <label for="searchYear">Introduce año...</label>
     </div>
     <div class="form-floating mx-2">
-      <select id="searchType" name="searchType" class="form-control" placeholder="Tipo de contenido..." [(ngModel)]="searchType">
-        <option selected value="none">Selecciona...</option>
+      <select 
+        id="searchType" 
+        name="searchType" 
+        class="form-control border border-info" 
+        placeholder="Tipo de contenido..." 
+        [(ngModel)]="searchType"
+      >
+        <option selected disabled value="none">Selecciona...</option>
         <option value="movie">Películas</option>
         <option value="series">Series</option>
         <option value="episode">Episodios</option>
@@ -18,10 +38,10 @@
       <label for="searchType">Tipo de contenido</label>
     </div>
   }
-  <button type="submit" class="btn btn-info mx-1">
+  <button type="submit" class="btn btn-primary mx-1">
     <img src="./icons/search.svg" alt="Enviar consulta"/>
   </button>
-  <button type="button" class="btn btn-info mx-1" (click)="toggleSortOptions()">
+  <button type="button" class="btn btn-primary mx-1" data-bs-toggle="button" (click)="toggleSortOptions()">
     <img src="./icons/menu.svg" alt="Más opciones"/>
   </button>
 </form>

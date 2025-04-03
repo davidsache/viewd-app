@@ -18,6 +18,9 @@ export class SearchComponent {
   searchType: 'movie' | 'series' | 'episode' | 'none' = 'none';
   private searchService = inject(SearchService);
 
+  /**
+   * When the form is "submitted", run service method to begin the search.
+   */
   onSubmit() {
     const searchParams: SearchParams = {
       title: this.searchTitle,
@@ -25,9 +28,12 @@ export class SearchComponent {
       type: this.searchType
     }
 
-    this.searchService.search(searchParams);
+    this.searchService.newSearch(searchParams);
   }
 
+  /**
+   * Show/hide more search sorting options.
+   */
   toggleSortOptions() {
     this.showSortOptions = !this.showSortOptions;
   }

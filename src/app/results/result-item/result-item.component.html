@@ -54,15 +54,19 @@
       <hr/>
       <div class="row">
         <div class="col-md-8">
-          <button class="btn btn-info me-1" type="button" (click)="showCastTab()">Elenco</button>
-          <button class="btn btn-info ms-1" type="button" (click)="showDetailsTab()">Detalles</button>
+          <button class="btn btn-info me-1" type="button" [ngClass]="tab === 'cast' ? 'active' : ''" (click)="tabStatus('cast')">
+            Elenco
+          </button>
+          <button class="btn btn-info ms-1" type="button" [ngClass]="tab === 'details' ? 'active' : ''" (click)="tabStatus('details')">
+            Detalles
+          </button>
         </div>
         <div class="col-md-8 my-3">
           @switch (tab) {
-            @case (1) {
+            @case ('cast') {
               <p>{{ result.Actors }}</p>
             }
-            @case (2) {
+            @case ('details') {
               <ul>
                 <li>
                   <span class="fs-5">Fecha de lanzamiento:</span> {{ result.Released }}

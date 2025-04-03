@@ -10,15 +10,33 @@
               [src]="searchResult.Poster !== 'N/A' ? searchResult.Poster : './no-image.png'" 
               [alt]="'Poster de ' + searchResult.Title"
             />
-            <p class="fs-5 text-truncate">
-              {{ searchResult.Title + ' (' + searchResult.Year + ')' }}
-            </p>
+            <p class="fs-5 text-truncate">{{ searchResult.Title + ' (' + searchResult.Year + ')' }}</p>
           </div>
         }
       </div>
     </div>
+
+    @if (shouldHavePages()) {
+      <div class="my-2 text-center">
+        <button type="button" class="btn btn-primary mx-2" aria-pressed="false" (click)="navigateToPage('first')">
+          <img src="./icons/first.svg" alt="Primera página"/>
+        </button>
+        <button type="button" class="btn btn-primary" aria-pressed="false" (click)="navigateToPage('prev')">
+          <img src="./icons/previous.svg" alt="Página anterior"/>
+        </button>
+        <span class="mx-2">
+          {{ searchResults.CurrentPage }} / {{ totalPages() }}
+        </span>
+        <button type="button" class="btn btn-primary mx-2" aria-pressed="false" (click)="navigateToPage('next')">
+          <img src="./icons/next.svg" alt="Siguiente página"/>
+        </button>
+        <button type="button" class="btn btn-primary" aria-pressed="false" (click)="navigateToPage('last')">
+          <img src="./icons/last.svg" alt="Última página"/>
+        </button>
+      </div>
+    }
   }
   @else {
-    <p class="m-3">No hay resultados, prueba a buscar algo.</p>
+    <p class="m-3">No hay resultados para la búsqueda "<b>{{ searchResults.SearchTitle }}</b>".</p>
   }
 </section>
