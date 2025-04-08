@@ -4,29 +4,29 @@
       type="text" 
       id="searchTitle" 
       name="searchTitle" 
-      class="form-control border border-info" 
+      class="form-control border border-dark-subtle" 
       placeholder="Introduce un título..." 
       [(ngModel)]="searchTitle"
     />
-    <label for="searchTitle">Introduce un título...</label>
+    <label for="searchTitle" class="text-body">Introduce un título...</label>
   </div>
   @if (showSortOptions) {
     <div class="form-floating mx-2">
       <input 
         id="searchYear" 
         name="searchYear" 
-        class="form-control border border-info" 
+        class="form-control border border-dark-subtle" 
         placeholder="Introduce año..." 
         [(ngModel)]="searchYear" 
         numbersOnly
       />
-      <label for="searchYear">Introduce año...</label>
+      <label for="searchYear" class="text-body">Introduce año...</label>
     </div>
-    <div class="form-floating mx-2">
+    <div class="form-floating mx-2"> 
       <select 
         id="searchType" 
         name="searchType" 
-        class="form-control border border-info" 
+        class="form-control border border-dark-subtle" 
         placeholder="Tipo de contenido..." 
         [(ngModel)]="searchType"
       >
@@ -35,14 +35,25 @@
         <option value="series">Series</option>
         <option value="episode">Episodios</option>
       </select>
-      <label for="searchType">Tipo de contenido</label>
+      <label for="searchType" class="text-body">Tipo de contenido</label>
     </div>
   }
-  <button type="submit" class="btn btn-primary mx-1">
-    <img src="./icons/search.svg" alt="Enviar consulta"/>
+  <button type="submit" class="btn btn-secondary bg-primary-subtle mx-1">
+    <svg role="img" xmlns="http://www.w3.org/2000/svg" height="40px" viewBox="0 -960 960 960" width="40px" [attr.fill]="darkModeService.darkModeOn() ? '#e3e3e3' : '#000'">
+      <title>Enviar consulta</title>
+      <path d="M792-120.67 532.67-380q-30 25.33-69.64 39.67Q423.39-326 378.67-326q-108.44 
+        0-183.56-75.17Q120-476.33 120-583.33t75.17-182.17q75.16-75.17 182.5-75.17 107.33 0 182.16 
+        75.17 74.84 75.17 74.84 182.27 0 43.23-14 82.9-14 39.66-40.67 73l260 258.66-48 48Zm-414-272q79.17 0 
+        134.58-55.83Q568-504.33 568-583.33q0-79-55.42-134.84Q457.17-774 378-774q-79.72 0-135.53 55.83-55.8 
+        55.84-55.8 134.84t55.8 134.83q55.81 55.83 135.53 55.83Z"
+      />
+    </svg>
   </button>
-  <button type="button" class="btn btn-primary mx-1" data-bs-toggle="button" (click)="toggleSortOptions()">
-    <img src="./icons/menu.svg" alt="Más opciones"/>
+  <button type="button" class="btn btn-secondary bg-primary-subtle mx-1" data-bs-toggle="button" (click)="toggleSortOptions()">
+    <svg role="img" xmlns="http://www.w3.org/2000/svg" height="40px" viewBox="0 -960 960 960" width="40px" [attr.fill]="darkModeService.darkModeOn() ? '#e3e3e3' : '#000'">
+      <title>Más opciones de búsqueda</title>
+      <path d="M120-240v-66.67h720V-240H120Zm0-206.67v-66.66h720v66.66H120Zm0-206.66V-720h720v66.67H120Z"/>
+    </svg>
   </button>
 </form>
   

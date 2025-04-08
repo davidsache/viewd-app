@@ -1,8 +1,9 @@
-import { Component, inject } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { SearchService } from './search.service';
-import { NumbersOnlyDirective } from './number-restrict.directive';
+import { SearchService } from '../services/search.service';
+import { NumbersOnlyDirective } from '../directives/numbers-only.directive';
 import { SearchParams } from '../models/search-params';
+import { DarkModeService } from '../services/dark-mode.service';
 
 @Component({
   selector: 'app-search',
@@ -12,11 +13,12 @@ import { SearchParams } from '../models/search-params';
   styleUrl: './search.component.css'
 })
 export class SearchComponent {
+  private searchService = inject(SearchService);
+  darkModeService = inject(DarkModeService);
   showSortOptions = false;
   searchTitle = '';
   searchYear = '';
   searchType: 'movie' | 'series' | 'episode' | 'none' = 'none';
-  private searchService = inject(SearchService);
 
   /**
    * When the form is "submitted", run service method to begin the search.

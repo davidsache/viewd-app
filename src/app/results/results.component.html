@@ -1,42 +1,66 @@
 <section>
   @if (searchResults.Response === 'True') {
-    <h4 class="m-2 text-center">Resultados de "{{ searchResults.SearchTitle }}"</h4>
+    <h4 class="m-2 text-info text-body text-center">
+      Resultados de "{{ searchResults.SearchTitle }}"
+    </h4>
     <div class="container">
       <div class="row">
-        @for (searchResult of searchResults.Search; track searchResult.imdbID; let counter = $index) {
-          <div class="col-md-4 text-center cursor" (click)="loadResult(searchResult.imdbID)">
-            <img 
-              class="rounded my-2" 
-              [src]="searchResult.Poster !== 'N/A' ? searchResult.Poster : './no-image.png'" 
-              [alt]="'Poster de ' + searchResult.Title"
-            />
-            <p class="fs-5 text-truncate">{{ searchResult.Title + ' (' + searchResult.Year + ')' }}</p>
+        @for (searchResult of searchResults.Search; track searchResult.imdbID) {
+          <div class="col my-2">
+            <div class="card" (click)="loadResult(searchResult.imdbID)">
+              <img class="card-img-top" [src]="searchResult.Poster !== 'N/A' ? searchResult.Poster : './no-image.png'" [alt]="'Poster de ' + searchResult.Title"/>
+              <div class="card-body rounded">
+                <p class="card-title text-center text-truncate">
+                  {{ searchResult.Title + ' (' + searchResult.Year + ')' }}
+                </p>
+              </div>
+            </div>
           </div>
         }
       </div>
     </div>
 
     @if (shouldHavePages()) {
-      <div class="my-2 text-center">
-        <button type="button" class="btn btn-primary mx-2" aria-pressed="false" (click)="navigateToPage('first')">
-          <img src="./icons/first.svg" alt="Primera página"/>
+      <div class="text-body text-center py-3">
+        <button type="button" class="btn btn-secondary bg-primary-subtle mx-2" (click)="navigateToPage('first')">
+          <svg role="img" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" [attr.fill]="darkModeService.darkModeOn() ? '#e3e3e3' : '#000'">
+            <title>Primera página</title>
+            <path d="M440-240 200-480l240-240 56 56-183 184 183 184-56 56Zm264 0L464-480l240-240 56 56-183 184 183 184-56 56Z"/>
+          </svg>
         </button>
-        <button type="button" class="btn btn-primary" aria-pressed="false" (click)="navigateToPage('prev')">
-          <img src="./icons/previous.svg" alt="Página anterior"/>
+        <button type="button" class="btn btn-secondary bg-primary-subtle" (click)="navigateToPage('prev')">
+          <svg role="img" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" [attr.fill]="darkModeService.darkModeOn() ? '#e3e3e3' : '#000'">
+            <title>Página anterior</title>
+            <path d="M560-240 320-480l240-240 56 56-184 184 184 184-56 56Z"/>
+          </svg>
         </button>
         <span class="mx-2">
           {{ searchResults.CurrentPage }} / {{ totalPages() }}
         </span>
-        <button type="button" class="btn btn-primary mx-2" aria-pressed="false" (click)="navigateToPage('next')">
-          <img src="./icons/next.svg" alt="Siguiente página"/>
+        <button type="button" class="btn btn-secondary bg-primary-subtle mx-2" (click)="navigateToPage('next')">
+          <svg role="img" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" [attr.fill]="darkModeService.darkModeOn() ? '#e3e3e3' : '#000'">
+            <title>Siguiente página</title>
+            <path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z"/>
+          </svg>
         </button>
-        <button type="button" class="btn btn-primary" aria-pressed="false" (click)="navigateToPage('last')">
-          <img src="./icons/last.svg" alt="Última página"/>
+        <button type="button" class="btn btn-secondary bg-primary-subtle" (click)="navigateToPage('last')">
+          <svg role="img" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" [attr.fill]="darkModeService.darkModeOn() ? '#e3e3e3' : '#000'">
+            <title>Última página</title>
+            <path d="M383-480 200-664l56-56 240 240-240 240-56-56 183-184Zm264 0L464-664l56-56 240 240-240 240-56-56 183-184Z"/>
+          </svg>
         </button>
       </div>
     }
   }
   @else {
-    <p class="m-3">No hay resultados para la búsqueda "<b>{{ searchResults.SearchTitle }}</b>".</p>
+    @if (searchResults.SearchTitle === '') {
+      <p class="m-3 text-body">Introduce un título para poder realizar una búsqueda.</p>
+    }
+    @else if (searchResults.SearchTitle.length < 3) {
+      <p class="m-3 text-body">La búsqueda debe contener un mínimo de 3 letras.</p>
+    }
+    @else {
+      <p class="m-3 text-body">No hay resultados para la búsqueda "<b>{{ searchResults.SearchTitle }}</b>".</p>
+    }
   }
 </section>

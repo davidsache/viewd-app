@@ -58,6 +58,21 @@ export class SearchService {
   }
 
   /**
+   * Constructs an URL to get content using by its IMDb id, does an GET request, and returns the result to the 
+   * components subscribed to it.
+   * @param id IMDb id of the content.
+   */
+  getByImdbId(id: string) {
+    const contentUrl = 'http://www.omdbapi.com/?apikey=' + this.API_KEY + '&i=' + id + '&plot=full';
+
+    const subscription = this.httpClient.get<Result>(contentUrl).subscribe(
+      result => this.resultUpdated(result)
+    );
+
+    this.destroyRef.onDestroy(() => subscription.unsubscribe());
+  }
+
+  /**
    * Sends the search results to whomever is subscribed (ResultsComponent), and navigates to ResultsComponent.
    * @param newSearchResults Object with the result of the search.
    */
@@ -76,21 +91,6 @@ export class SearchService {
   private resultUpdated(newResult: Result) {
     this.resultData.next(newResult);
     this.router.navigate(['result']);
-  }
-
-  /**
-   * Constructs an URL to get content using by its IMDb id, does an GET request, and returns the result to the 
-   * components subscribed to it.
-   * @param id IMDb id of the content.
-   */
-  getByImdbId(id: string) {
-    const contentUrl = 'http://www.omdbapi.com/?apikey=' + this.API_KEY + '&i=' + id + '&plot=full';
-
-    const subscription = this.httpClient.get<Result>(contentUrl).subscribe(
-      result => this.resultUpdated(result)
-    );
-
-    this.destroyRef.onDestroy(() => subscription.unsubscribe());
   }
 
   /**

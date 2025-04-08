@@ -3,6 +3,7 @@ a {
   color: black;
 }
 
-.cursor {
+.card {
   cursor: pointer;
+  width: 20rem;
 }

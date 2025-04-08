@@ -1,6 +1,6 @@
-import { Component, DestroyRef, inject, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, computed, DestroyRef, inject, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { Result } from '../../models/result.model';
-import { SearchService } from '../../search/search.service';
+import { SearchService } from '../../services/search.service';
 import { NgClass } from '@angular/common';
 
 @Component({
@@ -14,13 +14,14 @@ export class ResultItemComponent implements OnChanges {
   private destroyRef = inject(DestroyRef);
   @Input({ required: true }) result!: Result;
   tab: 'cast' | 'details' | 'off' = 'off';
+  imagePoster = computed(() => (this.result.Poster !== 'N/A' ? this.result.Poster : './no-image.png'));
   
   ngOnInit() {
-    const resultSubscription = this.searchService.resultData$.subscribe(
+    const subscription = this.searchService.resultData$.subscribe(
       result => this.result = result
     );
 
-    this.destroyRef.onDestroy(() => resultSubscription.unsubscribe());
+    this.destroyRef.onDestroy(() => subscription.unsubscribe());
   }
 
   /**
@@ -30,7 +31,7 @@ export class ResultItemComponent implements OnChanges {
   ngOnChanges(changes: SimpleChanges) {
     this.tabStatus('off');
   }
-
+  
   /**
    * Change the info tab status.
    * @param status 'cast': Show tab with the cast info / 'details': Shows tab with info about the content / 'off': Hides the tab completely.

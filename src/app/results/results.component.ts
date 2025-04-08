@@ -1,6 +1,7 @@
 import { Component, DestroyRef, inject, Input, OnInit } from '@angular/core';
 import { SearchResults } from '../models/search-results.model';
-import { SearchService } from '../search/search.service';
+import { SearchService } from '../services/search.service';
+import { DarkModeService } from '../services/dark-mode.service';
 
 @Component({
   selector: 'app-results',
@@ -12,18 +13,19 @@ export class ResultsComponent implements OnInit {
   @Input({ required: true }) searchResults!: SearchResults;
   private searchService = inject(SearchService);
   private destroyRef = inject(DestroyRef);
+  darkModeService = inject(DarkModeService);
 
   ngOnInit() {
-    const searchSubscription = this.searchService.searchData$.subscribe(
+    const subscription = this.searchService.searchData$.subscribe(
       searchData => this.searchResults = searchData
     );
 
-    this.destroyRef.onDestroy(() => searchSubscription.unsubscribe);
+    this.destroyRef.onDestroy(() => subscription.unsubscribe);
   }
 
   /**
    * Returns wheter it should show the page navigation buttons.
-   * @returns True if more than one page (more than 10 results).
+   * @returns True if more than one page (more than 10 search results).
    */
   shouldHavePages(): boolean {
     if (parseInt(this.searchResults.totalResults) > 10)
@@ -74,8 +76,8 @@ export class ResultsComponent implements OnInit {
   }
 
   /**
-   * Loads the clicked movie, show etc...
-   * @param id Imdb ID of the movie, show...
+   * Loads the clicked content.
+   * @param id IMDb id of the clicked content.
    */
   loadResult(id: string) {
     this.searchService.getByImdbId(id);

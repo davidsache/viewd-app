@@ -1,20 +1,16 @@
-<section class="py-2 mx-auto my-3 rounded">
+<section class="mx-auto my-3">
   @if (result.Response === 'True') {
     <div class="container">
       <div class="row">
         <div class="col-sm">
           <a [href]="result.Poster" target="_blank">
-            <img 
-              class="rounded" 
-              [src]="result.Poster !== 'N/A' ? result.Poster : './no-image.png'" 
-              [alt]="'Poster de ' + result.Title"
-            />
+            <img class="rounded" [src]="imagePoster()" [alt]="'Poster de ' + result.Title"/>
           </a>
         </div>
         <div class="col-md-8">
-          <p class="fs-3">
+          <h3 class="my-2 py-2 text-body">
             {{ result.Title }} · {{ result.Year }} · {{ result.Director }}
-          </p>
+          </h3>
           <p>
             @for (rate of result.Ratings; track rate.Source) {
               <span>
@@ -38,47 +34,57 @@
                     {{ rate.Source + ': ' }}
                   }
                 }
-                <span class="ps-1">{{ rate.Value }}</span>
+                <span class="ps-1 text-body">{{ rate.Value }}</span>
 
                 @if (!$last) { 
-                  <span class="p-1">·</span> 
+                  <span class="p-1 text-body">·</span> 
                 } 
               </span>
             }
           </p>
-          <p>
+          <p class="text-body">
             {{ result.Plot }}
           </p>
         </div>
       </div>
-      <hr/>
+      <hr class="bg-primary bg-gradient"/>
       <div class="row">
         <div class="col-md-8">
-          <button class="btn btn-info me-1" type="button" [ngClass]="tab === 'cast' ? 'active' : ''" (click)="tabStatus('cast')">
+          <button 
+            class="btn btn-secondary bg-primary-subtle me-1 text-body" 
+            type="button" 
+            [ngClass]="tab === 'cast' ? 'active' : ''" 
+            (click)="tabStatus('cast')">
             Elenco
           </button>
-          <button class="btn btn-info ms-1" type="button" [ngClass]="tab === 'details' ? 'active' : ''" (click)="tabStatus('details')">
+          <button 
+            class="btn btn-secondary bg-primary-subtle ms-1 text-body" 
+            type="button" 
+            [ngClass]="tab === 'details' ? 'active' : ''" 
+            (click)="tabStatus('details')">
             Detalles
           </button>
         </div>
         <div class="col-md-8 my-3">
           @switch (tab) {
             @case ('cast') {
-              <p>{{ result.Actors }}</p>
+              <p class="text-body">
+                {{ result.Actors }}
+              </p>
             }
             @case ('details') {
-              <ul>
-                <li>
-                  <span class="fs-5">Fecha de lanzamiento:</span> {{ result.Released }}
+              <ul class="text-body">
+                <li class="py-1">
+                  <span class="h5">Fecha de lanzamiento:</span> {{ result.Released }}
                 </li>
-                <li>
-                  <span class="fs-5">País:</span> {{ result.Country }}
+                <li class="py-1">
+                  <span class="h5">País:</span> {{ result.Country }}
                 </li>
-                <li>
-                  <span class="fs-5">Recaudación:</span> {{ result.BoxOffice }}
+                <li class="py-1">
+                  <span class="h5">Recaudación:</span> {{ result.BoxOffice }}
                 </li>
-                <li>
-                  <span class="fs-5">Premios:</span> {{ result.Awards }}
+                <li class="py-1">
+                  <span class="h5">Premios:</span> {{ result.Awards }}
                 </li>
               </ul>
             }
@@ -88,6 +94,6 @@
     </div>
   }
   @else {
-    <p class="m-3">No hay resultados, prueba a buscar algo.</p>
+    <p class="m-3 text-body">No hay resultados, prueba a buscar algo.</p>
   }
 </section>
