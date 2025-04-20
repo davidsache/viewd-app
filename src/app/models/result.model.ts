@@ -12,7 +12,10 @@ export interface Result {
   Poster: string,
   Production: string,
   Rated: string,
-  Ratings: { Source: string, Value: string }[],
+  Ratings: {
+    Source: string, 
+    Value: string
+  }[],
   Released: string,
   Response: string,
   Runtime: string,
@@ -23,5 +26,6 @@ export interface Result {
   Year: string,
   imdbID: string,
   imdbRating: string,
-  imdbVotes: string
+  imdbVotes: string,
+  totalSeasons: string | undefined
 }

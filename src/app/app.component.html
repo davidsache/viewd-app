@@ -1,3 +1,7 @@
+@if (error()) {
+  <app-error-modal title="¡Un error ha ocurrido!" [message]="error()"/>
+}
+
 <div [attr.data-bs-theme]="darkModeOn()" class="page bg-info-subtle bg-gradient">
   <app-header/>
   <main>

@@ -1,34 +1,63 @@
-import { Component, computed, DestroyRef, inject, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, computed, DestroyRef, inject, Input, OnChanges } from '@angular/core';
 import { Result } from '../../models/result.model';
 import { SearchService } from '../../services/search.service';
-import { NgClass } from '@angular/common';
+import { DarkModeService } from '../../services/dark-mode.service';
+import { UserInteractionsService } from '../../services/user-interactions.service';
+import { RatingComponent } from "../../rating/rating.component";
 
 @Component({
   selector: 'app-result-item',
-  imports: [NgClass],
+  imports: [RatingComponent],
   templateUrl: './result-item.component.html',
   styleUrl: './result-item.component.css'
 })
 export class ResultItemComponent implements OnChanges {
   private searchService = inject(SearchService);
   private destroyRef = inject(DestroyRef);
+  private userInteractionsService = inject(UserInteractionsService);
+  darkModeService = inject(DarkModeService);
   @Input({ required: true }) result!: Result;
-  tab: 'cast' | 'details' | 'off' = 'off';
   imagePoster = computed(() => (this.result.Poster !== 'N/A' ? this.result.Poster : './no-image.png'));
-  
+  seasonsNumber?: number[];
+  tab: 'cast' | 'details' | 'off' = 'off';
+  isFavoriteAlready = false;
+  addedToWatched = false;
+
   ngOnInit() {
     const subscription = this.searchService.resultData$.subscribe(
-      result => this.result = result
+      result => this.resultReceived(result)
     );
 
     this.destroyRef.onDestroy(() => subscription.unsubscribe());
   }
 
   /**
-   * When there is a change in the page, reset the tab to off.
-   * @param changes Changes object.
+   * Receives result, and checks wheter it was watched today, and also if it is a series (to show it's seasons).
+   * @param result Content of the result.
    */
-  ngOnChanges(changes: SimpleChanges) {
+  resultReceived(result: Result) {
+    this.result = result;
+    this.addedToWatched = this.userInteractionsService.findIfWatchedToday(this.result.imdbID);
+
+    if (this.result.Type === 'series' && this.result.totalSeasons !== undefined) {
+      this.seasonsNumber = Array.from({ length: parseInt(this.result.totalSeasons) }, (_, i) => i + 1);
+    }
+    
+    this.isFavoriteAlready = this.userInteractionsService.findFavorite(this.result.imdbID, false).alreadyFav;
+  }
+
+  /**
+   * Gets a season of a show.
+   * @param seasonNumber Number of the season.
+   */
+  loadSeason(seasonNumber: number) {
+    this.searchService.fetchShowSeason(this.result.imdbID, seasonNumber);
+  }
+
+  /**
+   * When there is a change in the page, reset the tab to off.
+   */
+  ngOnChanges() {
     this.tabStatus('off');
   }
   
@@ -37,11 +66,68 @@ export class ResultItemComponent implements OnChanges {
    * @param status 'cast': Show tab with the cast info / 'details': Shows tab with info about the content / 'off': Hides the tab completely.
    */
   tabStatus(status: 'cast' | 'details' | 'off') {
-    if (this.tab === status) {
-      this.tab = 'off';
+    this.tab === status ? this.tab = 'off' : this.tab = status;
+  }
+
+  /**
+   * Returns text according with the content rating.
+   * @returns Text according to the rating.
+   */
+  ratedText(): string {
+    switch (this.result.Rated) {
+      case 'G':
+        return '(Todas las edades)';
+
+      case 'PG':
+        return '(Se sugiere la orientación de los padres)';
+
+      case 'PG-13':
+        return '(No recomendado a menores de 13 años)';
+
+      case 'R': 
+        return '(No recomendado a menores de 17 años)';
+
+      case 'NC-17':
+        return '(Recomendado a partir de 18 años)';
+
+      case 'TV-PG':
+        return '(7-10 años en adelante)';
+    
+      case 'TV-14':
+        return '(14 años en adelante)';
+    
+      case 'TV-MA':
+        return '(17-18 años en adelante)';
+    
+      default:
+        return '';
+    }
+  }
+
+  /**
+   * Add content to the favorites tab.
+   */
+  addFavorite() {
+    this.isFavoriteAlready = !this.isFavoriteAlready;
+    this.userInteractionsService.addFavorite({
+      imdbID: this.result.imdbID,
+      Title: this.result.Title,
+      Year: this.result.Year,
+      Type: this.result.Type
+    });
+  }
+
+  /**
+   * Add content to the watched tab, or removes it if it was logged today.
+   */
+  addToWatched() {
+    if (!this.addedToWatched) {
+      this.addedToWatched = true;
+      this.userInteractionsService.addWatched(this.result);
     }
     else {
-      this.tab = status;
+      this.addedToWatched = false;
+      this.userInteractionsService.removeWatched(this.result.imdbID , new Date().toDateString());
     }
   }
 }

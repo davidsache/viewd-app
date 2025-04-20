@@ -1,0 +1,68 @@
+<div class="container text-body text-center">
+  <div class="row">
+    @if (watched!.length > 0) {
+      <div class="col-md-4 d-flex align-items-center justify-content-center">
+        <button type="button" class="btn" (click)="sortWatched()">
+          <svg role="img" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" [attr.fill]="darkModeService.darkModeOn() ? '#e3e3e3' : '#000'">
+            <path d="M320-440v-287L217-624l-57-56 200-200 200 200-57 56-103-103v287h-80ZM600-80 400-280l57-56 103 103v-287h80v287l103-103 57 56L600-80Z"/>
+          </svg>
+        </button>
+        <h5>Actividad</h5>
+      </div>
+    }
+    @if (favorites!.length > 0) {
+      <div class="col-md-4 align-items-center">
+        <h5>Contenido favorito</h5>
+      </div>
+    }
+    <div class="col-md-4">
+      <h5>Mis listas</h5>
+    </div>
+  </div>
+  <div class="row">
+    @if (watched!.length > 0) {
+      <div class="col-md-4 scrollable-column">
+        @for (watch of watched; track watch.WatchedDate) {
+          <h5>{{ watch.WatchedDate | date:'dd/MM/YY' }}</h5>
+          @for (content of watch.Content; track content.imdbID) {
+            <div class="watchedContainer my-1">
+              <button type="button" class="btn p-0" (click)="removeEntry(content.imdbID, watch.WatchedDate)">
+                <svg class="show" role="img" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" [attr.fill]="darkModeService.darkModeOn() ? '#e3e3e3' : '#000'">
+                  <path d="m376-300 104-104 104 104 56-56-104-104 104-104-56-56-104 104-104-104-56 56 104 104-104 
+                  104 56 56Zm-96 180q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 
+                  56.5T680-120H280Zm400-600H280v520h400v-520Zm-400 0v520-520Z"/>
+                </svg>
+              </button>
+              <span class="clickable pe-1" (click)="goToContent(content.imdbID)">
+                {{ content.Title + ' (' + content.Year + ')' }}
+              </span>
+            </div>
+          }
+          <hr class="mb-1"/>
+        }
+      </div>
+    }
+    @if (favorites!.length > 0) {
+      <div class="col-md-4 scrollable-column">
+        @for (favorite of favorites; track favorite.imdbID) {
+          <div class="favoriteContainer my-1">
+            <button type="button" class="btn p-0" (click)="removeFavorite(favorite.imdbID)">
+              <svg class="show" role="img" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" [attr.fill]="darkModeService.darkModeOn() ? '#e3e3e3' : '#000'">
+                <path d="m376-300 104-104 104 104 56-56-104-104 104-104-56-56-104 104-104-104-56 56 104 104-104 
+                104 56 56Zm-96 180q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 
+                56.5T680-120H280Zm400-600H280v520h400v-520Zm-400 0v520-520Z"/>
+              </svg>
+            </button>
+            <span class="clickable pe-1" (click)="goToContent(favorite.imdbID)">
+              {{ favorite.Title }} {{ '(' + favorite.Year + ')' }}
+            </span>
+          </div>
+          <hr class="my-2"/>
+        }
+      </div>
+    }
+    <div class="col-md-4 scrollable-column">
+      
+    </div>
+  </div>
+</div>

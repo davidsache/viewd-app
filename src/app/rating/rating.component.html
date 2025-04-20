@@ -1,0 +1,18 @@
+<form class="d-flex justify-content-center" #ratingForm="ngForm" (ngSubmit)="onSubmit()">
+  <div class="text-center">
+    <div class="rating">
+      @for (num of [5, 4, 3, 2, 1]; track num) {
+        <input 
+          type="radio" 
+          name="rating" 
+          [value]="num" 
+          [id]="num" 
+          [(ngModel)]="rating.Rating"
+          [checked]="rating.Rating === num" 
+          (change)="ratingForm.ngSubmit.emit()"
+        />
+        <label [for]="num">☆</label> 
+      }
+    </div>
+  </div>
+</form>

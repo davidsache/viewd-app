@@ -2,13 +2,57 @@
   @if (result.Response === 'True') {
     <div class="container">
       <div class="row">
-        <div class="col-sm">
+        <div class="col-sm text-center">
           <a [href]="result.Poster" target="_blank">
             <img class="rounded" [src]="imagePoster()" [alt]="'Poster de ' + result.Title"/>
           </a>
+          <div>
+            <app-rating [imdbID]="result.imdbID"/>
+            <button type="button" class="btn me-2" (click)="addToWatched()">
+              @if (addedToWatched) {
+                <svg role="img" xmlns="http://www.w3.org/2000/svg" height="40px" viewBox="0 -960 960 960" width="40px" [attr.fill]="darkModeService.darkModeOn() ? '#00ff00' : '#00d100'">
+                  <path d="M480-320q75 0 127.5-52.5T660-500q0-75-52.5-127.5T480-680q-75 0-127.5 52.5T300-500q0 75 52.5 
+                  127.5T480-320Zm0-72q-45 0-76.5-31.5T372-500q0-45 31.5-76.5T480-608q45 0 76.5 31.5T588-500q0 45-31.5 
+                  76.5T480-392Zm0 192q-146 0-266-81.5T40-500q54-137 174-218.5T480-800q146 0 266 81.5T920-500q-54 137-174 
+                  218.5T480-200Z"/>
+                </svg>
+              }
+              @else {
+                <svg role="img" xmlns="http://www.w3.org/2000/svg" height="40px" viewBox="0 -960 960 960" width="40px" [attr.fill]="darkModeService.darkModeOn() ? '#00ff00' : '#00d100'">
+                  <path d="M480-320q75 0 127.5-52.5T660-500q0-75-52.5-127.5T480-680q-75 0-127.5 52.5T300-500q0 75 52.5 
+                  127.5T480-320Zm0-72q-45 0-76.5-31.5T372-500q0-45 31.5-76.5T480-608q45 0 76.5 31.5T588-500q0 45-31.5 
+                  76.5T480-392Zm0 192q-146 0-266-81.5T40-500q54-137 174-218.5T480-800q146 0 266 81.5T920-500q-54 137-174 
+                  218.5T480-200Zm0-300Zm0 220q113 0 207.5-59.5T832-500q-50-101-144.5-160.5T480-720q-113 0-207.5 59.5T128-500q50 
+                  101 144.5 160.5T480-280Z"/>
+                </svg>
+              }
+            </button>
+            <button type="button" class="btn mx-2" (click)="addFavorite()">
+              @if (isFavoriteAlready) {
+                <svg role="img" xmlns="http://www.w3.org/2000/svg" height="40px" viewBox="0 -960 960 960" width="40px" [attr.fill]="darkModeService.darkModeOn() ? '#ff0000' : '#d10000'">
+                  <path d="m480-120-58-52q-101-91-167-157T150-447.5Q111-500 95.5-544T80-634q0-94 63-157t157-63q52 0 99 22t81 
+                  62q34-40 81-62t99-22q94 0 157 63t63 157q0 46-15.5 90T810-447.5Q771-395 705-329T538-172l-58 52Z"/>
+                </svg>
+              }
+              @else {
+                <svg role="img" xmlns="http://www.w3.org/2000/svg" height="40px" viewBox="0 -960 960 960" width="40px" [attr.fill]="darkModeService.darkModeOn() ? '#ff0000' : '#d10000'">
+                  <path d="m480-120-58-52q-101-91-167-157T150-447.5Q111-500 95.5-544T80-634q0-94 63-157t157-63q52 0 99 22t81 
+                  62q34-40 81-62t99-22q94 0 157 63t63 157q0 46-15.5 90T810-447.5Q771-395 705-329T538-172l-58 52Zm0-108q96-86 
+                  158-147.5t98-107q36-45.5 50-81t14-70.5q0-60-40-100t-100-40q-47 0-87 26.5T518-680h-76q-15-41-55-67.5T300-774q-60 
+                  0-100 40t-40 100q0 35 14 70.5t50 81q36 45.5 98 107T480-228Zm0-273Z"/>
+                </svg>
+              }
+            </button>
+            <button type="button" class="btn mx-2">
+              <svg role="img" xmlns="http://www.w3.org/2000/svg" height="40px" viewBox="0 -960 960 960" width="40px" [attr.fill]="darkModeService.darkModeOn() ? '#007bd1' : '#00d1d1'">
+                <path d="M440-280h80v-160h160v-80H520v-160h-80v160H280v80h160v160ZM200-120q-33 0-56.5-23.5T120-200v-560q0-33 
+                23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Zm0-560v560-560Z"/>
+              </svg>
+            </button>
+          </div>
         </div>
         <div class="col-md-8">
-          <h3 class="my-2 py-2 text-body">
+          <h3 class="text-body">
             {{ result.Title }} · {{ result.Year }} · {{ result.Director }}
           </h3>
           <p>
@@ -46,31 +90,31 @@
             {{ result.Plot }}
           </p>
         </div>
+        @if (result.totalSeasons !== undefined) {
+          <div class="col-md-4 text-body">
+            <p>Temporadas:</p>
+            @for (num of seasonsNumber; track num) {
+              <div class="clickable badge mx-1 text-bg-info" (click)="loadSeason(num)">
+                Temporada {{ num }}
+              </div>
+            }
+          </div>
+        }
       </div>
       <hr class="bg-primary bg-gradient"/>
       <div class="row">
         <div class="col-md-8">
-          <button 
-            class="btn btn-secondary bg-primary-subtle me-1 text-body" 
-            type="button" 
-            [ngClass]="tab === 'cast' ? 'active' : ''" 
-            (click)="tabStatus('cast')">
+          <button class="btn btn-secondary bg-primary-subtle me-1 text-body" type="button" (click)="tabStatus('cast')">
             Elenco
           </button>
-          <button 
-            class="btn btn-secondary bg-primary-subtle ms-1 text-body" 
-            type="button" 
-            [ngClass]="tab === 'details' ? 'active' : ''" 
-            (click)="tabStatus('details')">
+          <button class="btn btn-secondary bg-primary-subtle ms-1 text-body" type="button" (click)="tabStatus('details')">
             Detalles
           </button>
         </div>
         <div class="col-md-8 my-3">
           @switch (tab) {
             @case ('cast') {
-              <p class="text-body">
-                {{ result.Actors }}
-              </p>
+              <p class="text-body">{{ result.Actors }}</p>
             }
             @case ('details') {
               <ul class="text-body">
@@ -78,11 +122,16 @@
                   <span class="h5">Fecha de lanzamiento:</span> {{ result.Released }}
                 </li>
                 <li class="py-1">
-                  <span class="h5">País:</span> {{ result.Country }}
+                  <span class="h5">Calificación:</span> {{ result.Rated }} {{ ratedText() }}
                 </li>
                 <li class="py-1">
-                  <span class="h5">Recaudación:</span> {{ result.BoxOffice }}
+                  <span class="h5">País:</span> {{ result.Country }}
                 </li>
+                @if (result.Type === 'movie') {
+                  <li class="py-1">
+                    <span class="h5">Recaudación:</span> {{ result.BoxOffice }}
+                  </li>
+                }
                 <li class="py-1">
                   <span class="h5">Premios:</span> {{ result.Awards }}
                 </li>

@@ -2,7 +2,7 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { SearchService } from '../services/search.service';
 import { NumbersOnlyDirective } from '../directives/numbers-only.directive';
-import { SearchParams } from '../models/search-params';
+import { SearchParams } from '../models/search-params.model';
 import { DarkModeService } from '../services/dark-mode.service';
 
 @Component({

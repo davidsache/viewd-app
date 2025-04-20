@@ -1,0 +1,40 @@
+<section class="mx-auto my-3">
+  @if (season.Response === 'True') {
+    <div class="container text-body">
+      <div class="col md-8">
+        <h3 class="text-center">{{ season.Title }} - Temporada {{ season.Season }}</h3>
+      </div>
+      <div class="col md-8">
+        @for (episode of season.Episodes; track episode.imdbID; let i = $index) {
+          <div class="my-2 clickable" (click)="loadEpisode(episode.imdbID)">
+            <span class="fs-5">
+              T{{ season.Season }}.E{{ $index + 1 }}: {{ episode.Title }}
+            </span>
+            <p>
+              @if (episode.Released !== 'N/A') {
+                <span class="me-1">
+                  <svg role="img" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" [attr.fill]="darkModeService.darkModeOn() ? '#e3e3e3' : '#000'">
+                    <path d="M200-80q-33 0-56.5-23.5T120-160v-560q0-33 23.5-56.5T200-800h40v-80h80v80h320v-80h80v80h40q33 0 56.5 
+                    23.5T840-720v560q0 33-23.5 56.5T760-80H200Zm0-80h560v-400H200v400Zm0-480h560v-80H200v80Zm0 0v-80 80Z"/>
+                  </svg>
+                  {{ episode.Released | date }}
+                </span>
+              }
+              <span class="ms-1">
+                <svg role="img" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" [attr.fill]="darkModeService.darkModeOn() ? '#e3e3e3' : '#000'">
+                  <path d="m363-390 117-71 117 71-31-133 104-90-137-11-53-126-53 126-137 11 104 90-31 133ZM80-80v-720q0-33 23.5-56.5T160-880h640q33
+                   0 56.5 23.5T880-800v480q0 33-23.5 56.5T800-240H240L80-80Zm126-240h594v-480H160v525l46-45Zm-46 0v-480 480Z"/>
+                  </svg>
+                {{ episode.imdbRating }}
+              </span>
+            </p>
+          </div>
+          <hr/>
+        }
+      </div>
+    </div>
+  }
+  @else {
+
+  }
+</section>

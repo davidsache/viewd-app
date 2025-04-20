@@ -1,13 +1,14 @@
 import { Routes } from '@angular/router';
-import { NoResultsComponent } from './no-results/no-results.component';
+import { MainPageComponent } from './main-page/main-page.component';
 import { ResultItemComponent } from './results/result-item/result-item.component';
 import { ResultsComponent } from './results/results.component';
 import { NotFoundComponent } from './not-found/not-found.component';
+import { ResultSeasonComponent } from './results/result-season/result-season.component';
 
 export const routes: Routes = [
   {
     path: '', 
-    component: NoResultsComponent
+    component: MainPageComponent
   },
   {
     path: 'search',
@@ -15,7 +16,11 @@ export const routes: Routes = [
   },
   {
     path: 'result',
-    component: ResultItemComponent,
+    component: ResultItemComponent
+  },
+  {
+    path: 'season',
+    component: ResultSeasonComponent
   },
   {
     path: '**',

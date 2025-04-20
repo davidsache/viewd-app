@@ -1,0 +1,13 @@
+.scrollable-column {
+  max-height: 768px;
+  overflow-y: auto;
+}
+
+.show {
+  display: none;
+}
+
+div.watchedContainer:hover svg.show,
+div.favoriteContainer:hover svg.show {
+  display: inline;
+}

@@ -4,16 +4,20 @@ import { Result } from '../models/result.model'
 import { SearchResults } from '../models/search-results.model';
 import { BehaviorSubject } from 'rxjs';
 import { Router } from '@angular/router';
-import { SearchParams } from '../models/search-params';
+import { SearchParams } from '../models/search-params.model';
+import { Season } from '../models/season.model';
+import { ErrorService } from './error.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SearchService {
   private readonly API_KEY = '8148b372';
+  private readonly BASE_URL = 'http://www.omdbapi.com/';
 
   private httpClient = inject(HttpClient);
   private destroyRef = inject(DestroyRef);
+  private errorService = inject(ErrorService);
   private router = inject(Router);
 
   private searchData = new BehaviorSubject<SearchResults>({} as any);
@@ -21,6 +25,9 @@ export class SearchService {
 
   private resultData = new BehaviorSubject<Result>({} as any);
   resultData$ = this.resultData.asObservable();
+
+  private seasonData = new BehaviorSubject<Season>({} as any);
+  seasonData$ = this.seasonData.asObservable();
 
   private currentSearchUrl = '';
   private currentSearchTitle = '';
@@ -32,7 +39,7 @@ export class SearchService {
    */
   newSearch(params: SearchParams) {
     this.currentSearchTitle = params.title;
-    this.currentSearchUrl = 'http://www.omdbapi.com/?apikey=' + this.API_KEY + '&s=' + this.currentSearchTitle;
+    this.currentSearchUrl = this.BASE_URL + '?apikey=' + this.API_KEY + '&s=' + this.currentSearchTitle;
     this.currentSearchPage = 1;
 
     if (params.type !== 'none')
@@ -63,11 +70,33 @@ export class SearchService {
    * @param id IMDb id of the content.
    */
   getByImdbId(id: string) {
-    const contentUrl = 'http://www.omdbapi.com/?apikey=' + this.API_KEY + '&i=' + id + '&plot=full';
+    const url = this.BASE_URL + '?apikey=' + this.API_KEY + '&i=' + id + '&plot=full';
 
-    const subscription = this.httpClient.get<Result>(contentUrl).subscribe(
-      result => this.resultUpdated(result)
-    );
+    const subscription = this.httpClient.get<Result>(url).subscribe({
+      next: (result) => this.resultUpdated(result),
+      error: (error) => this.errorService.showError(error.message)
+    });
+
+    this.destroyRef.onDestroy(() => subscription.unsubscribe());
+  }
+
+  /**
+   * Sends the content result to whomever is subscribed (ResultItemComponent), and navigates to ResultItemComponent.
+   * @param newResult Object with the info of the result.
+   */
+  private resultUpdated(newResult: Result) {
+    this.resultData.next(newResult);
+    this.router.navigate(['result']);
+  }
+
+  /**
+   * GET request to fetch the search results, and returns the results to the components subscribed to it
+   */
+  private searchRequest() {
+    const subscription = this.httpClient.get<SearchResults>(this.currentSearchUrl).subscribe({
+      next: (searchResults) => this.searchResultsUpdated(searchResults),
+      error: (error) => this.errorService.showError(error.message)
+    });
 
     this.destroyRef.onDestroy(() => subscription.unsubscribe());
   }
@@ -85,22 +114,27 @@ export class SearchService {
   }
 
   /**
-   * Sends the content result to whomever is subscribed (ResultItemComponent), and navigates to ResultItemComponent.
-   * @param newResult Object with the info of the result.
+   * GET request to fetch the season of a show, and returns the result to the components subscribed to it.
+   * @param imdbID IMDb id of the series.
+   * @param season Number of the season to fetch.
    */
-  private resultUpdated(newResult: Result) {
-    this.resultData.next(newResult);
-    this.router.navigate(['result']);
+  fetchShowSeason(imdbID: string, season: number) {
+    const url = this.BASE_URL + '?apikey=' + this.API_KEY + '&i=' + imdbID + '&Season=' + season.toString();
+
+    const subscription = this.httpClient.get<Season>(url).subscribe({
+      next: (season) => this.showSeasonUpdated(season),
+      error: (error) => this.errorService.showError(error.message)
+    });
+
+    this.destroyRef.onDestroy(() => subscription.unsubscribe());
   }
 
   /**
-   * GET request to fetch the search results, and returns the results to the components subscribed to it
+   * Sends the season result to whomever is subscribed (ResultSeasonComponent), and navigates to ResultSeasonComponent.
+   * @param season Object with the season content.
    */
-  private searchRequest() {
-    const subscription = this.httpClient.get<SearchResults>(this.currentSearchUrl).subscribe(
-      searchResults => this.searchResultsUpdated(searchResults)
-    );
-
-    this.destroyRef.onDestroy(() => subscription.unsubscribe());
+  showSeasonUpdated(season: Season) {
+    this.seasonData.next(season);
+    this.router.navigate(['season']);
   }
 }
