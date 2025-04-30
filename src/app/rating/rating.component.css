@@ -3,47 +3,65 @@
   border-bottom-left-radius: 12px
 }
 
-.rating {
+.buttons {
+  top: 36px;
+  position: relative
+}
+
+.ratingDark, 
+.ratingLight {
   display: flex;
   flex-direction: row-reverse;
   justify-content: center
 }
 
-.rating>input {
+.ratingDark>input, 
+.ratingLight>input {
   display: none
 }
 
-.rating>label {
+.ratingDark>label, 
+.ratingLight>label {
   position: relative;
   width: 1em;
   font-size: 30px;
   font-weight: 300;
-  color: #ffaa00;
   cursor: pointer
 }
 
-.rating>label::before {
+.ratingDark>label {
+  color: #eb5200;
+}
+
+.ratingLight>label {
+  color: #eb8900;
+}
+
+.ratingDark>label::before, 
+.ratingLight>label::before {
   content: "\2605";
   position: absolute;
   opacity: 0
 }
 
-.rating>label:hover:before,
-.rating>label:hover~label:before {
+.ratingDark>label:hover:before, 
+.ratingDark>label:hover~label:before {
   opacity: 1 !important
 }
 
-.rating>input:checked~label:before {
+.ratingLight>label:hover:before, 
+.ratingLight>label:hover~label:before {
+  opacity: 1 !important
+}
+
+.ratingDark>input:checked~label:before, 
+.ratingLight>input:checked~label:before {
   opacity: 1
 }
 
-.rating:hover>input:checked~label:before {
+.ratingDark:hover>input:checked~label:before, 
+.ratingLight:hover>input:checked~label:before {
   opacity: 0.4
-}
-
-.buttons {
-  top: 36px;
-  position: relative
 }
 
 .rating-submit {

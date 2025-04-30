@@ -1,29 +1,40 @@
-import { Injectable } from '@angular/core';
-import { Favorite } from '../models/favorite.model';
+import { inject, Injectable } from '@angular/core';
 import { Watched } from '../models/watched.model';
 import { Result } from '../models/result.model';
 import { Rating } from '../models/rating.model';
+import { List } from '../models/list.model';
+import { BehaviorSubject } from 'rxjs';
+import { Router } from '@angular/router';
+import { ContentDataModel } from '../models/content-data.model';
 
+/**
+ * Service to get and set: lists, ratings, watched and favorites.
+ */
 @Injectable({
   providedIn: 'root'
 })
 export class UserInteractionsService {
-  private favoriteContent: Favorite[];
+  private favoriteContent: ContentDataModel[];
   private watchedFilms: Watched[];
   private ratings: Rating[];
+  private lists: List[];
   private sort: 'asc' | 'desc' = 'desc';
-
+  private listData = new BehaviorSubject<List>({} as any);
+  private router = inject(Router);
+  listData$ = this.listData.asObservable();
+  
   constructor() {
     this.favoriteContent = JSON.parse(localStorage.getItem('viewdFavorites') || '[]');
     this.watchedFilms = JSON.parse(localStorage.getItem('viewdWatched') || '[]');
     this.ratings = JSON.parse(localStorage.getItem('viewdRatings') || '[]');
+    this.lists = JSON.parse(localStorage.getItem('viewdLists') || '[]');
   }
 
   /**
    * Returns the array of all the favorite content.
    * @returns The favorite content array.
    */
-  getFavorites(): Favorite[] {
+  getFavorites(): ContentDataModel[] {
     return this.favoriteContent;
   }
 
@@ -31,11 +42,11 @@ export class UserInteractionsService {
    * Adds content to favorite, and removes it if it was already a favorite.
    * @param favorite Object with the content.
    */
-  addFavorite(favorite: Favorite) {
-    const fav = this.findFavorite(favorite.imdbID, true)
+  addFavorite(favorite: ContentDataModel) {
+    const index = this.favoriteContent.findIndex(item => item.imdbID === favorite.imdbID);
     
-    if (fav.alreadyFav) {
-      this.favoriteContent.splice(fav.itemIndex, 1);
+    if (index !== -1) {
+      this.favoriteContent.splice(index, 1);
     }
     else {
       this.favoriteContent.push(favorite);
@@ -45,18 +56,13 @@ export class UserInteractionsService {
   }
 
   /**
-   * Finds if a favorite its already added.
+   * Finds if a content is already a favorite.
    * @param imdbID IMDb id of the content.
-   * @param returnIndex Should return the index where is located within the array (if not then returns -1).
-   * @returns
+   * @returns True if it was added as a favorite, false otherwise.
    */
-  findFavorite(imdbID: string, returnIndex: boolean) {
-    const index = this.favoriteContent.map(item => item.imdbID).indexOf(imdbID);
-
-    return {
-      alreadyFav: index > -1 ? true : false,
-      itemIndex: returnIndex ? index : -1
-    };
+  findFavorite(imdbID: string): boolean {
+    const index = this.favoriteContent.findIndex(favorite => favorite.imdbID === imdbID);
+    return index !== -1 ? true : false;
   }
 
   removeFavorite(imdbID: string) {
@@ -111,7 +117,9 @@ export class UserInteractionsService {
       watched.Content.push({
         imdbID: result.imdbID,
         Title: result.Title,
-        Year: result.Year
+        Year: result.Year,
+        Poster: result.Poster,
+        Type: result.Type
       });
 
       this.watchedFilms.push(watched);
@@ -120,7 +128,9 @@ export class UserInteractionsService {
       this.watchedFilms[arrIndex].Content.push({
         imdbID: result.imdbID,
         Title: result.Title,
-        Year: result.Year
+        Year: result.Year,
+        Poster: result.Poster,
+        Type: result.Type
       });
     }
 
@@ -199,5 +209,70 @@ export class UserInteractionsService {
     }
 
     localStorage.setItem('viewdRatings', JSON.stringify(this.ratings));
+  }
+
+  getLists(): List[] {
+    return this.lists;
+  }
+
+  addList(listData: List) {
+    const arrIndex = this.lists.findIndex(list => list.listID === listData.listID);
+
+    if (arrIndex === -1) {
+      this.lists.push(listData);
+      localStorage.setItem('viewdLists', JSON.stringify(this.lists));
+    }
+  }
+
+  openList(listID: string) {
+    const list = this.lists.find(list => list.listID === listID);
+
+    if (list !== undefined) {
+      this.listData.next(list);
+      this.router.navigate(['list']);
+    }
+  }
+
+  addToList(listID: string, contentToAdd: ContentDataModel): 'ok' | 'alreadyAdded' | 'listNotFound' {
+    const index = this.lists.findIndex(list => list.listID === listID);
+
+    if (index !== -1) {
+      const contentIndex = this.lists[index].Content
+        .findIndex(content => content.imdbID === contentToAdd.imdbID);
+
+      if (contentIndex === -1) {
+        this.lists[index].Content.push(contentToAdd);
+        localStorage.setItem('viewdLists', JSON.stringify(this.lists));
+        return 'ok';
+      }
+      else {
+        return 'alreadyAdded'
+      }
+    }
+    else {
+      return 'listNotFound';
+    }
+  }
+
+  removeList(listID: string) {
+    const index = this.lists.findIndex(list => list.listID === listID);
+
+    if (index !== -1) {
+      this.lists.splice(index, 1);
+      localStorage.setItem('viewdLists', JSON.stringify(this.lists));
+    }
+  }
+
+  removeFromList(imdbID: string, listID: string) {
+    const listIndex = this.lists.findIndex(list => list.listID === listID);
+
+    if (listIndex !== -1) {
+      const contentIndex = this.lists[listIndex].Content.findIndex(content => content.imdbID === imdbID);
+
+      if (contentIndex !== -1) {
+        this.lists[listIndex].Content.splice(contentIndex, 1);
+        localStorage.setItem('viewdLists', JSON.stringify(this.lists));
+      }
+    }
   }
 }

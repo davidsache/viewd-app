@@ -6,12 +6,12 @@ import { BehaviorSubject } from 'rxjs';
 import { Router } from '@angular/router';
 import { SearchParams } from '../models/search-params.model';
 import { Season } from '../models/season.model';
-import { ErrorService } from './error.service';
+import { ErrorService } from './error-modal.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class SearchService {
+export class OmdbApiService {
   private readonly API_KEY = '8148b372';
   private readonly BASE_URL = 'http://www.omdbapi.com/';
 

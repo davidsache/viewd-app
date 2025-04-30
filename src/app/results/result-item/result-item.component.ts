@@ -1,9 +1,11 @@
 import { Component, computed, DestroyRef, inject, Input, OnChanges } from '@angular/core';
 import { Result } from '../../models/result.model';
-import { SearchService } from '../../services/search.service';
+import { OmdbApiService } from '../../services/omdb-api.service';
 import { DarkModeService } from '../../services/dark-mode.service';
 import { UserInteractionsService } from '../../services/user-interactions.service';
 import { RatingComponent } from "../../rating/rating.component";
+import { ListsService } from '../../services/lists-modal.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-result-item',
@@ -12,9 +14,11 @@ import { RatingComponent } from "../../rating/rating.component";
   styleUrl: './result-item.component.css'
 })
 export class ResultItemComponent implements OnChanges {
-  private searchService = inject(SearchService);
-  private destroyRef = inject(DestroyRef);
   private userInteractionsService = inject(UserInteractionsService);
+  private omdbApiService = inject(OmdbApiService);
+  private listsService = inject(ListsService);
+  private destroyRef = inject(DestroyRef);
+  private router = inject(Router);
   darkModeService = inject(DarkModeService);
   @Input({ required: true }) result!: Result;
   imagePoster = computed(() => (this.result.Poster !== 'N/A' ? this.result.Poster : './no-image.png'));
@@ -23,27 +27,44 @@ export class ResultItemComponent implements OnChanges {
   isFavoriteAlready = false;
   addedToWatched = false;
 
+  svgFillWatched = computed(() => (this.darkModeService.darkModeOn() ? '#3cb371' : '#32cd32'));
+  svgFillFavorite = computed(() => (this.darkModeService.darkModeOn() ? '#ff0000' : '#d10000'));
+  svgFillAddToList = computed(() => (this.darkModeService.darkModeOn() ? '#007bd1' : '#1e90ff'));
+
   ngOnInit() {
-    const subscription = this.searchService.resultData$.subscribe(
-      result => this.resultReceived(result)
-    );
+    const subscription = this.omdbApiService.resultData$
+      .subscribe(result => this.resultReceived(result));
 
     this.destroyRef.onDestroy(() => subscription.unsubscribe());
   }
 
   /**
-   * Receives result, and checks wheter it was watched today, and also if it is a series (to show it's seasons).
+   * When there is a change in the page, reset the tab to off.
+   */
+  ngOnChanges() {
+    if (this.tab !== 'off')
+      this.tabStatus('off');
+  }
+
+  /**
+   * Receives result, and checks whether it was watched today, and also if it is a series (to show it's seasons).
    * @param result Content of the result.
    */
-  resultReceived(result: Result) {
+  private resultReceived(result: Result) {
     this.result = result;
-    this.addedToWatched = this.userInteractionsService.findIfWatchedToday(this.result.imdbID);
 
-    if (this.result.Type === 'series' && this.result.totalSeasons !== undefined) {
-      this.seasonsNumber = Array.from({ length: parseInt(this.result.totalSeasons) }, (_, i) => i + 1);
+    if (Object.keys(this.result).length === 0) {
+      this.router.navigate(['']);
     }
-    
-    this.isFavoriteAlready = this.userInteractionsService.findFavorite(this.result.imdbID, false).alreadyFav;
+    else {
+      this.addedToWatched = this.userInteractionsService.findIfWatchedToday(this.result.imdbID);
+
+      if (this.result.Type === 'series' && this.result.totalSeasons !== undefined) {
+        this.seasonsNumber = Array.from({ length: parseInt(this.result.totalSeasons) }, (_, i) => i + 1);
+      }
+      
+      this.isFavoriteAlready = this.userInteractionsService.findFavorite(this.result.imdbID);
+    }
   }
 
   /**
@@ -51,14 +72,7 @@ export class ResultItemComponent implements OnChanges {
    * @param seasonNumber Number of the season.
    */
   loadSeason(seasonNumber: number) {
-    this.searchService.fetchShowSeason(this.result.imdbID, seasonNumber);
-  }
-
-  /**
-   * When there is a change in the page, reset the tab to off.
-   */
-  ngOnChanges() {
-    this.tabStatus('off');
+    this.omdbApiService.fetchShowSeason(this.result.imdbID, seasonNumber);
   }
   
   /**
@@ -113,7 +127,8 @@ export class ResultItemComponent implements OnChanges {
       imdbID: this.result.imdbID,
       Title: this.result.Title,
       Year: this.result.Year,
-      Type: this.result.Type
+      Type: this.result.Type,
+      Poster: 'N/A'
     });
   }
 
@@ -129,5 +144,10 @@ export class ResultItemComponent implements OnChanges {
       this.addedToWatched = false;
       this.userInteractionsService.removeWatched(this.result.imdbID , new Date().toDateString());
     }
+  }
+
+  addContentToList(content: Result) {
+    this.listsService.listVisibility('AddToList', true);
+    this.listsService.contentToAdd(content);
   }
 }

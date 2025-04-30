@@ -3,11 +3,13 @@
   overflow-y: auto;
 }
 
-.show {
+button.show {
   display: none;
+  border: 0;
 }
 
-div.watchedContainer:hover svg.show,
-div.favoriteContainer:hover svg.show {
+div.watchedContainer:hover button.show,
+div.favoriteContainer:hover button.show,
+div.listContainer:hover button.show {
   display: inline;
 }

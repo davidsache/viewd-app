@@ -1,5 +1,5 @@
 import { Component, inject, input } from '@angular/core';
-import { ErrorService } from '../../services/error.service';
+import { ErrorService } from '../../services/error-modal.service';
 import { ModalComponent } from "../modal.component";
 
 @Component({

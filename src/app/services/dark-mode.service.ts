@@ -1,10 +1,11 @@
-import { Injectable, signal } from '@angular/core';
+import { computed, Injectable, signal } from '@angular/core';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DarkModeService {
-  darkModeOn = signal<boolean>(false);
+  darkModeOn = signal(true);
+  svgFill = computed(() => (this.darkModeOn() ? '#e3e3e3' : '#000000'));
 
   constructor() {
     this.darkModeOn.set(JSON.parse(localStorage.getItem('viewdDarkMode') || 'false'));  // JSON.parse can convert a string to a boolean.

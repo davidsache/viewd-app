@@ -1,10 +1,12 @@
-import { Component, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { UserInteractionsService } from '../services/user-interactions.service';
-import { Favorite } from '../models/favorite.model';
-import { SearchService } from '../services/search.service';
+import { OmdbApiService } from '../services/omdb-api.service';
 import { Watched } from '../models/watched.model';
 import { DatePipe } from '@angular/common';
 import { DarkModeService } from '../services/dark-mode.service';
+import { ListsService } from '../services/lists-modal.service';
+import { List } from '../models/list.model';
+import { ContentDataModel } from '../models/content-data.model';
 
 @Component({
   selector: 'app-main-page',
@@ -13,15 +15,20 @@ import { DarkModeService } from '../services/dark-mode.service';
   styleUrl: './main-page.component.css'
 })
 export class MainPageComponent {
-  private searchService = inject(SearchService);
+  private omdbApiService = inject(OmdbApiService);
   userInteractionService = inject(UserInteractionsService);
   darkModeService = inject(DarkModeService);
-  favorites?: Favorite[];
-  watched?: Watched[];
+  listsService = inject(ListsService);
+  favorites: ContentDataModel[] = [];
+  watched: Watched[] = [];
+  lists: List[] = [];
+
+  buttonSvgFill = computed(() => (this.darkModeService.darkModeOn() ? '#6ea8fe' : '#052c65'));
 
   ngOnInit() {
     this.favorites = this.userInteractionService.getFavorites();
     this.watched = this.userInteractionService.getWatched();
+    this.lists = this.userInteractionService.getLists();
   }
 
   /**
@@ -29,7 +36,7 @@ export class MainPageComponent {
    * @param imdbID IMDb id of the content.
    */
   goToContent(imdbID: string) {
-    this.searchService.getByImdbId(imdbID);
+    this.omdbApiService.getByImdbId(imdbID);
   }
 
   /**
@@ -45,5 +52,22 @@ export class MainPageComponent {
 
   removeFavorite(imdbID: string) {
     this.userInteractionService.removeFavorite(imdbID);
+  }
+
+  showAddListForm() {
+    this.listsService.listVisibility('AddList', true);
+  }
+
+  openList(listID: string) {
+    this.userInteractionService.openList(listID);
+  }
+
+  addContentToList(content: ContentDataModel) {
+    this.listsService.listVisibility('AddToList', true);
+    this.listsService.contentToAdd(content);
+  }
+
+  removeList(listID: string) {
+    this.userInteractionService.removeList(listID);
   }
 }

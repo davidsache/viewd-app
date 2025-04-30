@@ -1,6 +1,6 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { SearchService } from '../services/search.service';
+import { OmdbApiService } from '../services/omdb-api.service';
 import { NumbersOnlyDirective } from '../directives/numbers-only.directive';
 import { SearchParams } from '../models/search-params.model';
 import { DarkModeService } from '../services/dark-mode.service';
@@ -13,7 +13,7 @@ import { DarkModeService } from '../services/dark-mode.service';
   styleUrl: './search.component.css'
 })
 export class SearchComponent {
-  private searchService = inject(SearchService);
+  private omdbApiService = inject(OmdbApiService);
   darkModeService = inject(DarkModeService);
   showSortOptions = false;
   searchTitle = '';
@@ -30,7 +30,7 @@ export class SearchComponent {
       type: this.searchType
     }
 
-    this.searchService.newSearch(searchParams);
+    this.omdbApiService.newSearch(searchParams);
   }
 
   /**

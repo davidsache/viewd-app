@@ -1,18 +1,25 @@
-import { Component, inject, Input, OnInit } from '@angular/core';
-import { FormBuilder, FormsModule, NgForm } from '@angular/forms';
+import { Component, computed, inject, Input, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { UserInteractionsService } from '../services/user-interactions.service';
 import { Rating } from '../models/rating.model';
+import { DarkModeService } from '../services/dark-mode.service';
+import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'app-rating',
-  imports: [FormsModule],
+  imports: [FormsModule, NgClass],
   templateUrl: './rating.component.html',
   styleUrl: './rating.component.css'
 })
 export class RatingComponent implements OnInit {
-  @Input() imdbID = '';
   private userInteractionsService = inject(UserInteractionsService);
+  darkModeService = inject(DarkModeService);
+  @Input() imdbID = '';
   rating!: Rating;
+
+  ratingClass = computed(() => 
+    (this.darkModeService.darkModeOn() ? 'ratingDark' : 'ratingLight')
+  );
 
   ngOnInit() {
     const tempRating = this.userInteractionsService.findRating(this.imdbID);

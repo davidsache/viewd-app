@@ -1,7 +1,8 @@
-import { Component, DestroyRef, inject, Input, OnInit } from '@angular/core';
+import { Component, computed, DestroyRef, inject, Input, OnInit } from '@angular/core';
 import { SearchResults } from '../models/search-results.model';
-import { SearchService } from '../services/search.service';
+import { OmdbApiService } from '../services/omdb-api.service';
 import { DarkModeService } from '../services/dark-mode.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-results',
@@ -11,20 +12,31 @@ import { DarkModeService } from '../services/dark-mode.service';
 })
 export class ResultsComponent implements OnInit {
   @Input({ required: true }) searchResults!: SearchResults;
-  private searchService = inject(SearchService);
+  private omdbApiService = inject(OmdbApiService);
   private destroyRef = inject(DestroyRef);
+  private router = inject(Router);
   darkModeService = inject(DarkModeService);
 
   ngOnInit() {
-    const subscription = this.searchService.searchData$.subscribe(
-      searchData => this.searchResults = searchData
-    );
+    const subscription = this.omdbApiService.searchData$
+      .subscribe(searchData => this.searchResultsReceived(searchData));
 
     this.destroyRef.onDestroy(() => subscription.unsubscribe);
   }
 
   /**
-   * Returns wheter it should show the page navigation buttons.
+   * Receives the search results, and if they are "undefined" navigate back to main page.
+   * @param searchData Object with the search results data.
+   */
+  private searchResultsReceived(searchData: SearchResults) {
+    this.searchResults = searchData;
+
+    if (Object.keys(this.searchResults).length === 0)
+      this.router.navigate(['']);
+  }
+
+  /**
+   * Returns whether it should show the page navigation buttons.
    * @returns True if more than one page (more than 10 search results).
    */
   shouldHavePages(): boolean {
@@ -50,25 +62,25 @@ export class ResultsComponent implements OnInit {
     switch (page) {
       case 'next': {
         if (this.searchResults.CurrentPage < parseInt(this.searchResults.totalResults) / 10)
-          this.searchService.changeSearchPage(this.searchResults.CurrentPage + 1);
+          this.omdbApiService.changeSearchPage(this.searchResults.CurrentPage + 1);
 
         break;
       }
       case 'prev': {
         if (this.searchResults.CurrentPage !== 1)
-          this.searchService.changeSearchPage(this.searchResults.CurrentPage - 1);
+          this.omdbApiService.changeSearchPage(this.searchResults.CurrentPage - 1);
 
         break;
       }
       case 'first': {
         if (this.searchResults.CurrentPage !== 1)
-          this.searchService.changeSearchPage(1);
+          this.omdbApiService.changeSearchPage(1);
 
         break;
       }
       case 'last': {
         if (this.searchResults.CurrentPage !== this.totalPages())
-          this.searchService.changeSearchPage(this.totalPages());
+          this.omdbApiService.changeSearchPage(this.totalPages());
 
         break;
       }
@@ -80,6 +92,6 @@ export class ResultsComponent implements OnInit {
    * @param id IMDb id of the clicked content.
    */
   loadResult(id: string) {
-    this.searchService.getByImdbId(id);
+    this.omdbApiService.getByImdbId(id);
   }
 }

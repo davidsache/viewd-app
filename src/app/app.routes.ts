@@ -4,6 +4,7 @@ import { ResultItemComponent } from './results/result-item/result-item.component
 import { ResultsComponent } from './results/results.component';
 import { NotFoundComponent } from './not-found/not-found.component';
 import { ResultSeasonComponent } from './results/result-season/result-season.component';
+import { ResultListComponent } from './results/result-list/result-list.component';
 
 export const routes: Routes = [
   {
@@ -21,6 +22,10 @@ export const routes: Routes = [
   {
     path: 'season',
     component: ResultSeasonComponent
+  },
+  {
+    path: 'list',
+    component: ResultListComponent
   },
   {
     path: '**',

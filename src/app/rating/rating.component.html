@@ -1,6 +1,6 @@
 <form class="d-flex justify-content-center" #ratingForm="ngForm" (ngSubmit)="onSubmit()">
   <div class="text-center">
-    <div class="rating">
+    <div [ngClass]="ratingClass()">
       @for (num of [5, 4, 3, 2, 1]; track num) {
         <input 
           type="radio" 

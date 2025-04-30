@@ -1,0 +1,17 @@
+img {
+  width: 256px;
+  height: 256px;
+  border-radius: 4px;
+  box-shadow: 5px 6px 7px 0px rgba(0,0,0,0.24);
+  -webkit-box-shadow: 5px 6px 7px 0px rgba(0,0,0,0.24);
+  -moz-box-shadow: 5px 6px 7px 0px rgba(0,0,0,0.24);
+}
+
+button.show {
+  display: none;
+  border: 0;
+}
+
+li.releaseList:hover button.show {
+  display: inline;
+}

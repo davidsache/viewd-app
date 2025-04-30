@@ -1,0 +1,30 @@
+<app-modal>
+  <div class="bg-info-subtle bg-gradient p-3 text-info-emphasis">
+    @if (lists !== undefined && lists.length > 0) {
+      <div class="d-flex justify-content-between">
+        <p>Elige la lista a la que añadir "<b>{{ contentToAdd.Title }}</b>"</p>
+        <button type="button" class="btn btn-primary" (click)="closeAddToListModal()">x</button>
+      </div>
+      <ul>
+        @for (list of lists; track list.listID) {
+          <li>
+            <span class="clickable" (click)="listClicked(list.listID)">
+              {{ list.Name }}
+            </span>
+          </li>
+        }
+      </ul>
+    }
+    @else {
+      <div class="d-flex justify-content-between">
+        <h5>No tienes ninguna lista creada.</h5>
+        <button type="button" class="btn btn-dark" (click)="closeAddToListModal()">x</button>
+      </div>
+      <div>
+        <button type="button" class="btn btn-primary" (click)="showAddListModal()">
+          Crear nueva lista
+        </button>
+      </div>
+    }
+  </div>
+</app-modal>

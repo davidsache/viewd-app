@@ -1,33 +1,38 @@
 <div class="container text-body text-center">
   <div class="row">
-    @if (watched!.length > 0) {
-      <div class="col-md-4 d-flex align-items-center justify-content-center">
+    <div class="col-md-4 d-flex align-items-center justify-content-center">
+      @if (watched.length > 1) {
         <button type="button" class="btn" (click)="sortWatched()">
-          <svg role="img" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" [attr.fill]="darkModeService.darkModeOn() ? '#e3e3e3' : '#000'">
+          <svg role="img" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" [attr.fill]="buttonSvgFill()">
             <path d="M320-440v-287L217-624l-57-56 200-200 200 200-57 56-103-103v287h-80ZM600-80 400-280l57-56 103 103v-287h80v287l103-103 57 56L600-80Z"/>
           </svg>
         </button>
-        <h5>Actividad</h5>
-      </div>
-    }
-    @if (favorites!.length > 0) {
-      <div class="col-md-4 align-items-center">
-        <h5>Contenido favorito</h5>
-      </div>
-    }
-    <div class="col-md-4">
-      <h5>Mis listas</h5>
+      }
+      <h5 class="text-primary-emphasis">Actividad</h5>
+    </div>
+    <div class="col-md-4 align-items-center">
+      <h5 class="text-primary-emphasis">Contenido favorito</h5>
+    </div>
+    <div class="col-md-4 d-flex align-items-center justify-content-center">
+      <button type="button" class="btn" (click)="showAddListForm()">
+        <svg role="img" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" [attr.fill]="buttonSvgFill()">
+          <path d="M440-280h80v-160h160v-80H520v-160h-80v160H280v80h160v160Zm40 200q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 
+          31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127
+          85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/>
+        </svg>
+      </button>
+      <h5 class="text-primary-emphasis">Mis listas</h5>
     </div>
   </div>
   <div class="row">
-    @if (watched!.length > 0) {
-      <div class="col-md-4 scrollable-column">
+    <div class="col-md-4 scrollable-column">
+      @if (watched.length > 0) {
         @for (watch of watched; track watch.WatchedDate) {
           <h5>{{ watch.WatchedDate | date:'dd/MM/YY' }}</h5>
           @for (content of watch.Content; track content.imdbID) {
             <div class="watchedContainer my-1">
-              <button type="button" class="btn p-0" (click)="removeEntry(content.imdbID, watch.WatchedDate)">
-                <svg class="show" role="img" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" [attr.fill]="darkModeService.darkModeOn() ? '#e3e3e3' : '#000'">
+              <button type="button" class="btn p-0 show" (click)="removeEntry(content.imdbID, watch.WatchedDate)">
+                <svg role="img" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" [attr.fill]="darkModeService.svgFill()">
                   <path d="m376-300 104-104 104 104 56-56-104-104 104-104-56-56-104 104-104-104-56 56 104 104-104 
                   104 56 56Zm-96 180q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 
                   56.5T680-120H280Zm400-600H280v520h400v-520Zm-400 0v520-520Z"/>
@@ -36,18 +41,26 @@
               <span class="clickable pe-1" (click)="goToContent(content.imdbID)">
                 {{ content.Title + ' (' + content.Year + ')' }}
               </span>
+              <button type="button" class="btn p-0 show" (click)="addContentToList(content)">
+                <svg role="img" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" [attr.fill]="darkModeService.svgFill()">
+                  <path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z"/>
+                </svg>
+              </button>
             </div>
           }
-          <hr class="mb-1"/>
+          <hr/>
         }
-      </div>
-    }
-    @if (favorites!.length > 0) {
-      <div class="col-md-4 scrollable-column">
+      }
+      @else {
+        <p>Sin actividad.</p>
+      }
+    </div>
+    <div class="col-md-4 scrollable-column">
+      @if (favorites.length > 0) {
         @for (favorite of favorites; track favorite.imdbID) {
           <div class="favoriteContainer my-1">
-            <button type="button" class="btn p-0" (click)="removeFavorite(favorite.imdbID)">
-              <svg class="show" role="img" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" [attr.fill]="darkModeService.darkModeOn() ? '#e3e3e3' : '#000'">
+            <button type="button" class="btn p-0 show" (click)="removeFavorite(favorite.imdbID)">
+              <svg role="img" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" [attr.fill]="darkModeService.svgFill()">
                 <path d="m376-300 104-104 104 104 56-56-104-104 104-104-56-56-104 104-104-104-56 56 104 104-104 
                 104 56 56Zm-96 180q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 
                 56.5T680-120H280Zm400-600H280v520h400v-520Zm-400 0v520-520Z"/>
@@ -56,13 +69,39 @@
             <span class="clickable pe-1" (click)="goToContent(favorite.imdbID)">
               {{ favorite.Title }} {{ '(' + favorite.Year + ')' }}
             </span>
+            <button type="button" class="btn p-0 show" (click)="addContentToList(favorite)">
+              <svg role="img" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" [attr.fill]="darkModeService.svgFill()">
+                <path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z"/>
+              </svg>
+            </button>
           </div>
           <hr class="my-2"/>
         }
-      </div>
-    }
-    <div class="col-md-4 scrollable-column">
-      
+      }
+      @else {
+        <p>Sin actividad.</p>
+      }
     </div>
-  </div>
+    <div class="col-md-4 scrollable-column">
+      @if (lists!.length > 0) {
+        @for (list of lists; track list.listID) {
+          <div class="listContainer my-1" (click)="openList(list.listID)">
+            <button type="button" class="btn p-0 show" (click)="removeList(list.listID)">
+              <svg role="img" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" [attr.fill]="darkModeService.svgFill()">
+                <path d="m376-300 104-104 104 104 56-56-104-104 104-104-56-56-104 104-104-104-56 56 104 104-104 
+                104 56 56Zm-96 180q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 
+                56.5T680-120H280Zm400-600H280v520h400v-520Zm-400 0v520-520Z"/>
+              </svg>
+            </button>
+            <span class="clickable pe-1">
+              {{ list.Name }} · ({{  + list.Content.length }} añadidos)
+            </span>
+          </div>
+          <hr class="my-2"/>
+        }
+      }
+      @else {
+        <p>No tienes ninguna lista creada, pulsa el botón justo encima para crear una.</p>
+      }
+    </div>
 </div>
