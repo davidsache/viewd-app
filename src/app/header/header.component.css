@@ -6,3 +6,14 @@ button img {
   width: 32px;
   height: 32px;
 }
+
+@media only screen and (max-width: 576px) {
+  header {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  a {
+    margin: auto;
+  }
+}

@@ -1,104 +1,117 @@
 <div class="container text-body text-center">
   <div class="row">
-    <div class="col-md-4 d-flex align-items-center justify-content-center">
-      @if (watched.length > 1) {
-        <button type="button" class="btn" (click)="sortWatched()">
+    <!-- WATCHED -->
+    <div class="col-md-4">
+      <hr class="topSeparator" [ngClass]="separatorHrFill()"/>
+      <div class="d-flex justify-content-center align-items-center my-1">
+        <button type="button" class="btn py-0 px-1" (click)="sortWatched()">
           <svg role="img" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" [attr.fill]="buttonSvgFill()">
             <path d="M320-440v-287L217-624l-57-56 200-200 200 200-57 56-103-103v287h-80ZM600-80 400-280l57-56 103 103v-287h80v287l103-103 57 56L600-80Z"/>
           </svg>
         </button>
-      }
-      <h5 class="text-primary-emphasis">Actividad</h5>
-    </div>
-    <div class="col-md-4 align-items-center">
-      <h5 class="text-primary-emphasis">Contenido favorito</h5>
-    </div>
-    <div class="col-md-4 d-flex align-items-center justify-content-center">
-      <button type="button" class="btn" (click)="showAddListForm()">
-        <svg role="img" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" [attr.fill]="buttonSvgFill()">
-          <path d="M440-280h80v-160h160v-80H520v-160h-80v160H280v80h160v160Zm40 200q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 
-          31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127
-          85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/>
-        </svg>
-      </button>
-      <h5 class="text-primary-emphasis">Mis listas</h5>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-md-4 scrollable-column">
+        <h5 class="text-primary-emphasis mb-0">Actividad</h5>
+      </div>
       @if (watched.length > 0) {
-        @for (watch of watched; track watch.WatchedDate) {
-          <h5>{{ watch.WatchedDate | date:'dd/MM/YY' }}</h5>
-          @for (content of watch.Content; track content.imdbID) {
-            <div class="watchedContainer my-1">
-              <button type="button" class="btn p-0 show" (click)="removeEntry(content.imdbID, watch.WatchedDate)">
+        <div class="scrollable-column">
+          @for (watch of watched; track watch.WatchedDate) {
+            <h5 class="py-1">
+              <u>{{ watch.WatchedDate | date:'dd/MM/YY' }}</u>
+            </h5>
+            @for (content of watch.Content; track content.imdbID) {
+              <div class="watchedContainer d-flex justify-content-between align-items-center p-1 bg-opacity-25 badge" [ngClass]="badgeBackground()">
+                <button type="button" class="btn p-0 show" (click)="removeEntry(content.imdbID, content.Title, watch.WatchedDate)">
+                  <svg role="img" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" [attr.fill]="darkModeService.svgFill()">
+                    <path d="m376-300 104-104 104 104 56-56-104-104 104-104-56-56-104 104-104-104-56 56 104 104-104 
+                    104 56 56Zm-96 180q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 
+                    56.5T680-120H280Zm400-600H280v520h400v-520Zm-400 0v520-520Z"/>
+                  </svg>
+                </button>
+                <span class="clickable" (click)="goToContent(content.imdbID)">
+                  {{ content.Title + ' (' + content.Year + ')' }}
+                </span>
+                <button type="button" class="btn p-0 show" (click)="addContentToList(content)">
+                  <svg role="img" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" [attr.fill]="darkModeService.svgFill()">
+                    <path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z"/>
+                  </svg>
+                </button>
+              </div>
+            }
+          }
+        </div>
+      }
+      @else {
+        <p>Sin actividad.</p>
+      }
+    </div>
+
+    <!-- FAVORITES -->
+    <div class="col-md-4">
+      <hr class="topSeparator" [ngClass]="separatorHrFill()"/>
+      <h5 class="text-primary-emphasis">Contenido favorito</h5>
+      @if (favorites.length > 0) {
+        <div class="scrollable-column">
+          @for (favorite of favorites; track favorite.imdbID) {
+            <div class="favoriteContainer d-flex justify-content-between align-items-center p-1 bg-opacity-25 badge" [ngClass]="badgeBackground()">
+              <button type="button" class="btn p-0 show" (click)="removeFavorite(favorite.imdbID, favorite.Title)">
                 <svg role="img" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" [attr.fill]="darkModeService.svgFill()">
                   <path d="m376-300 104-104 104 104 56-56-104-104 104-104-56-56-104 104-104-104-56 56 104 104-104 
                   104 56 56Zm-96 180q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 
                   56.5T680-120H280Zm400-600H280v520h400v-520Zm-400 0v520-520Z"/>
                 </svg>
               </button>
-              <span class="clickable pe-1" (click)="goToContent(content.imdbID)">
-                {{ content.Title + ' (' + content.Year + ')' }}
+              <span class="clickable" (click)="goToContent(favorite.imdbID)">
+                {{ favorite.Title }} {{ '(' + favorite.Year + ')' }}
               </span>
-              <button type="button" class="btn p-0 show" (click)="addContentToList(content)">
+              <button type="button" class="btn p-0 show" (click)="addContentToList(favorite)">
                 <svg role="img" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" [attr.fill]="darkModeService.svgFill()">
                   <path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z"/>
                 </svg>
               </button>
             </div>
           }
-          <hr/>
-        }
+        </div>
       }
       @else {
         <p>Sin actividad.</p>
       }
     </div>
-    <div class="col-md-4 scrollable-column">
-      @if (favorites.length > 0) {
-        @for (favorite of favorites; track favorite.imdbID) {
-          <div class="favoriteContainer my-1">
-            <button type="button" class="btn p-0 show" (click)="removeFavorite(favorite.imdbID)">
-              <svg role="img" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" [attr.fill]="darkModeService.svgFill()">
-                <path d="m376-300 104-104 104 104 56-56-104-104 104-104-56-56-104 104-104-104-56 56 104 104-104 
-                104 56 56Zm-96 180q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 
-                56.5T680-120H280Zm400-600H280v520h400v-520Zm-400 0v520-520Z"/>
-              </svg>
-            </button>
-            <span class="clickable pe-1" (click)="goToContent(favorite.imdbID)">
-              {{ favorite.Title }} {{ '(' + favorite.Year + ')' }}
-            </span>
-            <button type="button" class="btn p-0 show" (click)="addContentToList(favorite)">
-              <svg role="img" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" [attr.fill]="darkModeService.svgFill()">
-                <path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z"/>
-              </svg>
-            </button>
-          </div>
-          <hr class="my-2"/>
-        }
-      }
-      @else {
-        <p>Sin actividad.</p>
-      }
-    </div>
-    <div class="col-md-4 scrollable-column">
+
+    <!-- LISTS -->
+    <div class="col-md-4">
+      <hr class="topSeparator" [ngClass]="separatorHrFill()"/>
+      <div class="d-flex justify-content-center align-items-center my-1">
+        <button type="button" class="btn py-0 px-1" (click)="showAddListForm()">
+          <svg role="img" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" [attr.fill]="buttonSvgFill()">
+            <path d="M440-280h80v-160h160v-80H520v-160h-80v160H280v80h160v160Zm40 200q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 
+            31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127
+            85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/>
+          </svg>
+        </button>
+        <h5 class="text-primary-emphasis mb-0">Mis listas</h5>
+      </div>
       @if (lists!.length > 0) {
-        @for (list of lists; track list.listID) {
-          <div class="listContainer my-1" (click)="openList(list.listID)">
-            <button type="button" class="btn p-0 show" (click)="removeList(list.listID)">
-              <svg role="img" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" [attr.fill]="darkModeService.svgFill()">
-                <path d="m376-300 104-104 104 104 56-56-104-104 104-104-56-56-104 104-104-104-56 56 104 104-104 
-                104 56 56Zm-96 180q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 
-                56.5T680-120H280Zm400-600H280v520h400v-520Zm-400 0v520-520Z"/>
-              </svg>
-            </button>
-            <span class="clickable pe-1">
-              {{ list.Name }} · ({{  + list.Content.length }} añadidos)
-            </span>
-          </div>
-          <hr class="my-2"/>
-        }
+        <div class="scrollable-column">
+          @for (list of lists; track list.listID) {
+            <div class="listContainer d-flex justify-content-between align-items-center p-1 bg-opacity-25 badge" [ngClass]="badgeBackground()">
+              <button type="button" class="btn p-0 show" (click)="removeList(list.listID, list.Name)">
+                <svg role="img" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" [attr.fill]="darkModeService.svgFill()">
+                  <path d="m376-300 104-104 104 104 56-56-104-104 104-104-56-56-104 104-104-104-56 56 104 104-104 
+                  104 56 56Zm-96 180q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 
+                  56.5T680-120H280Zm400-600H280v520h400v-520Zm-400 0v520-520Z"/>
+                </svg>
+              </button>
+              <span class="clickable" (click)="openList(list.listID)">
+                {{ list.Name }} · ({{ list.Content.length }} añadidos)
+              </span>
+              <button type="button" class="btn p-0 show" (click)="editList(list)">
+                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" [attr.fill]="darkModeService.svgFill()">
+                  <path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 
+                  56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z"/>
+                </svg>
+              </button>
+            </div>
+          }
+        </div>
       }
       @else {
         <p>No tienes ninguna lista creada, pulsa el botón justo encima para crear una.</p>

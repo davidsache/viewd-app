@@ -7,7 +7,7 @@
       <div class="row">
         @for (searchResult of searchResults.Search; track searchResult.imdbID) {
           <div class="col my-2">
-            <div class="card" (click)="loadResult(searchResult.imdbID)">
+            <div class="card mx-auto" (click)="loadResult(searchResult.imdbID)">
               <img class="card-img-top" [src]="searchResult.Poster !== 'N/A' ? searchResult.Poster : './no-image.png'" [alt]="'Poster de ' + searchResult.Title"/>
               <div class="card-body rounded">
                 <p class="card-title text-center text-truncate">

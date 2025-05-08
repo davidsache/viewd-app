@@ -11,7 +11,7 @@ import { ModalComponent } from "../modal.component";
 export class ErrorModalComponent {
   title = input<string>();
   message = input<string>();
-  private errorService = inject(ErrorService);
+  errorService = inject(ErrorService);
 
   /**
    * To clean the error.

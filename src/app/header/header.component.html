@@ -1,11 +1,6 @@
-<header class="navbar px-4">
-  <a routerLink="">
-    <img [src]="headerLogo()" alt="Viewd logo"/>
+<header class="navbar d-flex align-items-start px-4">
+  <a routerLink="" class="d-flex align-self-start">
+    <img [src]="headerLogo()" alt="Viewd logo" />
   </a>
-  <div class="d-flex">
-    <app-search/>
-    <button type="button" class="btn btn-secondary ms-2" [ngClass]="darkModeService.darkModeOn() ? 'bg-dark' : 'bg-info'" (click)="toggleDarkMode()">
-      <img [src]="buttonIcon()"/>
-    </button>
-  </div>
+  <ng-content/>
 </header>

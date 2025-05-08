@@ -15,8 +15,8 @@ import { ErrorService } from '../../../services/error-modal.service';
 export class AddToListModalComponent {
   private userInteractionsService = inject(UserInteractionsService);
   private errorService = inject(ErrorService);
-  private listsService = inject(ListsService);
   private destroyRef = inject(DestroyRef);
+  listsService = inject(ListsService);
   contentToAdd!: ContentDataModel;
   lists?: List[];
 
@@ -29,6 +29,10 @@ export class AddToListModalComponent {
     this.destroyRef.onDestroy(() => subscription.unsubscribe());
   }
 
+  /**
+   * Adds content to the clicked list, and if an error occurs, shows what the issue is.
+   * @param listID ID of the list.
+   */
   listClicked(listID: string) {
     const result = this.userInteractionsService.addToList(listID, this.contentToAdd);
     this.closeAddToListModal();
@@ -47,11 +51,18 @@ export class AddToListModalComponent {
     }
   }
 
+  /**
+   * Closes the "add to list" window.
+   */
   closeAddToListModal() {
     this.listsService.listVisibility('AddToList', false);
   }
 
+  /**
+   * Closes the "add to list" window and opens the "add list" window.
+   */
   showAddListModal() {
+    this.closeAddToListModal();
     this.listsService.listVisibility('AddList', true);
   }
 }

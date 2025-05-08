@@ -1,21 +1,30 @@
-import { Component, inject } from '@angular/core';
-import { ModalComponent } from '../../modal.component';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ListsService } from '../../../services/lists-modal.service';
-import { UserInteractionsService } from '../../../services/user-interactions.service';
+import { Component, DestroyRef, inject } from '@angular/core';
+import { ModalComponent } from "../../modal.component";
 import { List } from '../../../models/list.model';
+import { ListsService } from '../../../services/lists-modal.service';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { UserInteractionsService } from '../../../services/user-interactions.service';
 
 @Component({
-  selector: 'app-add-list-modal',
+  selector: 'app-edit-list-modal',
   imports: [ModalComponent, ReactiveFormsModule],
-  templateUrl: './add-list-modal.component.html',
-  styleUrl: './add-list-modal.component.css'
+  templateUrl: './edit-list-modal.component.html',
+  styleUrl: './edit-list-modal.component.css'
 })
-export class AddListModalComponent {
-  private userInteractionsService = inject(UserInteractionsService);
+export class EditListModalComponent {
+  userInteractionsService = inject(UserInteractionsService);
+  private destroyRef = inject(DestroyRef);
   listsService = inject(ListsService);
+  list!: List;
   form: FormGroup;
   selectedImage = '';
+  
+  ngOnInit() {
+    const subscription = this.listsService.list$
+      .subscribe(list => this.listReceived(list));
+
+    this.destroyRef.onDestroy(() => subscription.unsubscribe());
+  }
 
   constructor(private fb: FormBuilder) {
     this.form = this.fb.group({
@@ -23,6 +32,16 @@ export class AddListModalComponent {
       description: ['', [Validators.required, Validators.minLength(3)]],
       image: ['', [Validators.required]]
     })
+  }
+
+  private listReceived(list: List) {
+    this.list = list;
+
+    this.form.patchValue({
+      name: this.list.Name,
+      description: this.list.Description,
+      image: this.list.Image
+    });
   }
 
   onFileSelected(event: any) {
@@ -71,14 +90,14 @@ export class AddListModalComponent {
   formSubmit() {
     if (this.form.valid) {
       const listData: List = {
-        listID: crypto.randomUUID(),
+        listID: this.list.listID,
         Name: this.form.get('name')?.value,
         Description: this.form.get('description')?.value,
         Image: this.form.get('image')?.value,
-        Content: []
+        Content: this.list.Content
       }
 
-      this.userInteractionsService.addList(listData)
+      this.userInteractionsService.editList(listData)
       this.closeAddListForm();
     }
     else {
@@ -87,6 +106,6 @@ export class AddListModalComponent {
   }
 
   closeAddListForm() {
-    this.listsService.listVisibility('AddList', false);
+    this.listsService.listVisibility('EditList', false);
   }
 }

@@ -275,4 +275,20 @@ export class UserInteractionsService {
       }
     }
   }
+
+  editList(editedList: List) {
+    const listIndex = this.lists.findIndex(list => list.listID === editedList.listID);
+
+    if (listIndex != -1) {
+      this.lists[listIndex] = {
+        listID: editedList.listID,
+        Content: editedList.Content,
+        Description: editedList.Description,
+        Image: editedList.Image,
+        Name: editedList.Name
+      };
+
+      localStorage.setItem('viewdLists', JSON.stringify(this.lists));
+    }
+  }
 }

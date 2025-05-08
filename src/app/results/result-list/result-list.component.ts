@@ -5,6 +5,7 @@ import { List } from '../../models/list.model';
 import { OmdbApiService } from '../../services/omdb-api.service';
 import { ContentDataModel } from '../../models/content-data.model';
 import { Router } from '@angular/router';
+import { ConfirmModalService } from '../../services/confirm-modal.service';
 
 @Component({
   selector: 'app-result-list',
@@ -17,6 +18,7 @@ export class ResultListComponent {
   private omdbApiService = inject(OmdbApiService);
   private destroyRef = inject(DestroyRef);
   private router = inject(Router);
+  private confirmService = inject(ConfirmModalService);
   darkModeService = inject(DarkModeService);
   @Input({ required: true }) list!: List;
   favorites: ContentDataModel[] = [];
@@ -60,8 +62,12 @@ export class ResultListComponent {
    * Remove content from favorite.
    * @param imdbID IMDb id of the content.
    */
-  removeFav(imdbID: string) {
-    this.userInteractionsService.removeFavorite(imdbID);
+  removeFav(imdbID: string, title: string) {
+    this.confirmService.confirm('¿Deseas eliminar "' + title + '" de Favoritos?', (confirmed) => {
+      if (confirmed) {
+        this.userInteractionsService.removeFavorite(imdbID);
+      }
+    });
   }
 
   /**
@@ -77,7 +83,11 @@ export class ResultListComponent {
    * @param imdbID IMDb id of the content to remove.
    * @param listID ID of the list the content it's in.
    */
-  removeFromList(imdbID: string, listID: string) {
-    this.userInteractionsService.removeFromList(imdbID, listID);
+  removeFromList(imdbID: string, title: string, listID: string) {
+    this.confirmService.confirm('¿Deseas eliminar "' + title + '" de esta lista?', (confirmed) => {
+      if (confirmed) {
+        this.userInteractionsService.removeFromList(imdbID, listID);
+      }
+    });
   }
 }

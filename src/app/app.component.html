@@ -1,15 +1,15 @@
-@if (error() !== '') {
-  <app-error-modal title="¡Un error ha ocurrido!" [message]="error()"/>
-}
-@else if (addList()) {
-  <app-add-list-modal/>
-}
-@else if (addToList()) {
-  <app-add-to-list-modal/>
-}
-<div [attr.data-bs-theme]="mode()" id="page" [ngClass]="backgroundStyle()">
-  <app-header/>
-  <main>
-    <router-outlet/>
-  </main>
-</div>
+<app-header [attr.data-bs-theme]="mode()">
+  <app-search/>
+</app-header>
+
+<app-error-modal title="¡Un error ha ocurrido!" [message]="error()"/>
+<app-add-list-modal/>
+<app-add-to-list-modal/>
+<app-edit-list-modal/>
+<app-confirm-modal/>
+
+<main id="mainPage" class="mb-3" [attr.data-bs-theme]="mode()">
+  <router-outlet/>
+</main>
+
+<app-footer/>

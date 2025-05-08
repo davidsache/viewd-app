@@ -7,3 +7,9 @@ hr {
   border: 0;
   height: 1px;
 }
+
+@media only screen and (max-width: 576px) {
+  h3, p.contentRatings {
+    text-align: center;
+  }
+}

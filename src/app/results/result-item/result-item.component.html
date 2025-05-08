@@ -52,10 +52,10 @@
           </div>
         </div>
         <div class="col-md-8">
-          <h3 class="text-body">
+          <h3 class="text-body text-wrap">
             {{ result.Title }} · {{ result.Year }} · {{ result.Director }}
           </h3>
-          <p>
+          <p class="contentRatings">
             @for (rate of result.Ratings; track rate.Source) {
               <span>
                 @switch (rate.Source) {

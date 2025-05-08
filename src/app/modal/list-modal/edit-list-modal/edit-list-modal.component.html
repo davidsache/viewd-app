@@ -1,0 +1,38 @@
+@if (listsService.editListVisible()) {
+  <app-modal>
+    <div class="bg-info-subtle bg-gradient p-3 text-info-emphasis">
+      <form class="bg-info-subtle bg-gradient p-3 text-info-emphasis" [formGroup]="form" (ngSubmit)="formSubmit()">
+        <fieldset>
+          <legend class="d-flex justify-content-between">
+            Editar datos de lista
+          </legend>
+          <div class="mb-3 form-group">
+            <label class="form-label" for="listName">Nombre</label>
+            <input type="text" id="nameList" class="form-control" formControlName="name"/>
+            @if (nameIsInvalid) {
+              <p class="bg-danger-subtle px-1">Introduce un nombre de al menos 3 letras.</p>
+            }
+          </div>
+          <div class="mb-3 form-group">
+            <label for="listDesc">Descripción</label>
+            <textarea id="listDesc" class="form-control" formControlName="description" rows="5"></textarea>
+            @if (descriptionIsInvalid) {
+              <p class="bg-danger-subtle px-1">Introduce una descripción.</p>
+            }
+          </div>
+          <div class="mb-3 form-group">
+            <label class="form-label" for="listImg">Imagen (la misma si ninguna es seleccionada)</label>
+            <input type="file" id="listImg" class="form-control" accept=".png,.jpeg,.jpg" (change)="onFileSelected($event)"/>
+            @if (imageIsInvalid) {
+              <p class="bg-danger-subtle px-1">Adjunta una imagen <b>.jpg</b> o <b>.png</b>.</p>
+            }
+          </div>
+          <div class="confirmation-actions">
+            <button type="submit" class="btn btn-primary" [disabled]="form.invalid">Editar lista</button>
+            <button type="button" class="btn btn-secondary" (click)="closeAddListForm()">Cerrar</button>
+          </div>
+        </fieldset>
+      </form>
+    </div>
+  </app-modal>
+}

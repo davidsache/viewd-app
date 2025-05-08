@@ -1,0 +1,11 @@
+@if (visible) {
+  <app-modal>
+    <div class="bg-info-subtle bg-gradient p-3 text-info-emphasis">
+      <p>{{ message }}</p>
+      <div class="confirmation-actions">
+        <button type="button" class="btn btn-primary" (click)="respond(true)">Si</button>
+        <button type="button" class="btn btn-secondary" (click)="respond(false)">No</button>
+      </div>
+    </div>
+  </app-modal>
+}

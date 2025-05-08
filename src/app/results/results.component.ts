@@ -61,30 +61,41 @@ export class ResultsComponent implements OnInit {
   navigateToPage(page: 'next' | 'prev' | 'first' | 'last') {
     switch (page) {
       case 'next': {
-        if (this.searchResults.CurrentPage < parseInt(this.searchResults.totalResults) / 10)
+        if (this.searchResults.CurrentPage < parseInt(this.searchResults.totalResults) / 10) {
           this.omdbApiService.changeSearchPage(this.searchResults.CurrentPage + 1);
-
+          this.scrollTop();
+        }
         break;
       }
       case 'prev': {
-        if (this.searchResults.CurrentPage !== 1)
+        if (this.searchResults.CurrentPage !== 1) {
           this.omdbApiService.changeSearchPage(this.searchResults.CurrentPage - 1);
-
+          this.scrollTop();
+        }
         break;
       }
       case 'first': {
-        if (this.searchResults.CurrentPage !== 1)
+        if (this.searchResults.CurrentPage !== 1) {
           this.omdbApiService.changeSearchPage(1);
-
+          this.scrollTop();
+        }
         break;
       }
       case 'last': {
-        if (this.searchResults.CurrentPage !== this.totalPages())
+        if (this.searchResults.CurrentPage !== this.totalPages()) {
           this.omdbApiService.changeSearchPage(this.totalPages());
-
+          this.scrollTop();
+        }
         break;
       }
     }
+  }
+
+  /**
+   * Smoothly scrolls to the top of the page after loading a new page.
+   */
+  private scrollTop() {
+    window.scroll({ top: 0, left: 0, behavior: 'smooth' });
   }
 
   /**

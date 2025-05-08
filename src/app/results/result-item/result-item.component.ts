@@ -147,7 +147,6 @@ export class ResultItemComponent implements OnChanges {
   }
 
   addContentToList(content: Result) {
-    this.listsService.listVisibility('AddToList', true);
     this.listsService.contentToAdd(content);
   }
 }
