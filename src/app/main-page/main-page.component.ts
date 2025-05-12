@@ -25,9 +25,9 @@ export class MainPageComponent {
   watched: Watched[] = [];
   lists: List[] = [];
 
-  buttonSvgFill = computed(() => (this.darkModeService.darkModeOn() ? '#6ea8fe' : '#052c65'));
-  separatorHrFill = computed(() => (this.darkModeService.darkModeOn() ? 'topSeparatorDark' : 'topSeparatorLight'));
-  badgeBackground = computed(() => (this.darkModeService.darkModeOn() ? 'text-bg-dark' : 'text-bg-info'));
+  buttonSvgFill = computed(() => this.darkModeService.darkModeOn() ? '#6ea8fe' : '#052c65');
+  separatorHrFill = computed(() => this.darkModeService.darkModeOn() ? 'topSeparatorDark' : 'topSeparatorLight');
+  badgeBackground = computed(() => this.darkModeService.darkModeOn() ? 'text-bg-dark' : 'text-bg-info');
 
   ngOnInit() {
     this.favorites = this.userInteractionService.getFavorites();

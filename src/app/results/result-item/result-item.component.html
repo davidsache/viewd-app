@@ -10,7 +10,8 @@
             <app-rating [imdbID]="result.imdbID"/>
             <button type="button" class="btn me-2" (click)="addToWatched()">
               @if (addedToWatched) {
-                <svg role="img" xmlns="http://www.w3.org/2000/svg" height="40px" viewBox="0 -960 960 960" width="40px" [attr.fill]="svgFillWatched()">
+                <svg role="img" aria-labelledby="svgResultWatchedDelete" xmlns="http://www.w3.org/2000/svg" height="40px" viewBox="0 -960 960 960" width="40px" [attr.fill]="svgFillWatched()">
+                  <title id="svgResultWatchedDelete">Quitar de vistos</title>
                   <path d="M480-320q75 0 127.5-52.5T660-500q0-75-52.5-127.5T480-680q-75 0-127.5 52.5T300-500q0 75 52.5 
                   127.5T480-320Zm0-72q-45 0-76.5-31.5T372-500q0-45 31.5-76.5T480-608q45 0 76.5 31.5T588-500q0 45-31.5 
                   76.5T480-392Zm0 192q-146 0-266-81.5T40-500q54-137 174-218.5T480-800q146 0 266 81.5T920-500q-54 137-174 
@@ -18,7 +19,8 @@
                 </svg>
               }
               @else {
-                <svg role="img" xmlns="http://www.w3.org/2000/svg" height="40px" viewBox="0 -960 960 960" width="40px" [attr.fill]="svgFillWatched()">
+                <svg role="img" aria-labelledby="svgResultWatchedAdd" xmlns="http://www.w3.org/2000/svg" height="40px" viewBox="0 -960 960 960" width="40px" [attr.fill]="svgFillWatched()">
+                  <title id="svgResultWatchedAdd">Añadir a vistos</title>
                   <path d="M480-320q75 0 127.5-52.5T660-500q0-75-52.5-127.5T480-680q-75 0-127.5 52.5T300-500q0 75 52.5 
                   127.5T480-320Zm0-72q-45 0-76.5-31.5T372-500q0-45 31.5-76.5T480-608q45 0 76.5 31.5T588-500q0 45-31.5 
                   76.5T480-392Zm0 192q-146 0-266-81.5T40-500q54-137 174-218.5T480-800q146 0 266 81.5T920-500q-54 137-174 
@@ -29,13 +31,15 @@
             </button>
             <button type="button" class="btn mx-2" (click)="addFavorite()">
               @if (isFavoriteAlready) {
-                <svg role="img" xmlns="http://www.w3.org/2000/svg" height="40px" viewBox="0 -960 960 960" width="40px" [attr.fill]="svgFillFavorite()">
+                <svg role="img" aria-labelledby="svgResultFavoriteRemove" xmlns="http://www.w3.org/2000/svg" height="40px" viewBox="0 -960 960 960" width="40px" [attr.fill]="svgFillFavorite()">
+                  <title id="svgResultFavoriteRemove">Eliminar de favoritos</title>
                   <path d="m480-120-58-52q-101-91-167-157T150-447.5Q111-500 95.5-544T80-634q0-94 63-157t157-63q52 0 99 22t81 
                   62q34-40 81-62t99-22q94 0 157 63t63 157q0 46-15.5 90T810-447.5Q771-395 705-329T538-172l-58 52Z"/>
                 </svg>
               }
               @else {
-                <svg role="img" xmlns="http://www.w3.org/2000/svg" height="40px" viewBox="0 -960 960 960" width="40px" [attr.fill]="svgFillFavorite()">
+                <svg role="img" aria-labelledby="svgResultFavoriteAdd" xmlns="http://www.w3.org/2000/svg" height="40px" viewBox="0 -960 960 960" width="40px" [attr.fill]="svgFillFavorite()">
+                  <title id="svgResultFavoriteAdd">Añadir a favoritos</title>
                   <path d="m480-120-58-52q-101-91-167-157T150-447.5Q111-500 95.5-544T80-634q0-94 63-157t157-63q52 0 99 22t81 
                   62q34-40 81-62t99-22q94 0 157 63t63 157q0 46-15.5 90T810-447.5Q771-395 705-329T538-172l-58 52Zm0-108q96-86 
                   158-147.5t98-107q36-45.5 50-81t14-70.5q0-60-40-100t-100-40q-47 0-87 26.5T518-680h-76q-15-41-55-67.5T300-774q-60 
@@ -44,7 +48,8 @@
               }
             </button>
             <button type="button" class="btn mx-2" (click)="addContentToList(result)">
-              <svg role="img" xmlns="http://www.w3.org/2000/svg" height="40px" viewBox="0 -960 960 960" width="40px" [attr.fill]="svgFillAddToList()">
+              <svg role="img" aria-labelledby="svgResultAddToList" xmlns="http://www.w3.org/2000/svg" height="40px" viewBox="0 -960 960 960" width="40px" [attr.fill]="svgFillAddToList()">
+                <title id="svgResultAddToList">Añadir a lista</title>
                 <path d="M440-280h80v-160h160v-80H520v-160h-80v160H280v80h160v160ZM200-120q-33 0-56.5-23.5T120-200v-560q0-33 
                 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Zm0-560v560-560Z"/>
               </svg>
@@ -92,7 +97,7 @@
         </div>
         @if (result.totalSeasons !== undefined) {
           <div class="col-md-4 text-body">
-            <p>Temporadas:</p>
+            <p class="mb-0">Temporadas:</p>
             @for (num of seasonsNumber; track num) {
               <div class="clickable badge mx-1 text-bg-info" (click)="loadSeason(num)">
                 Temporada {{ num }}

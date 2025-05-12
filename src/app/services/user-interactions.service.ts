@@ -7,9 +7,6 @@ import { BehaviorSubject } from 'rxjs';
 import { Router } from '@angular/router';
 import { ContentDataModel } from '../models/content-data.model';
 
-/**
- * Service to get and set: lists, ratings, watched and favorites.
- */
 @Injectable({
   providedIn: 'root'
 })
@@ -211,10 +208,18 @@ export class UserInteractionsService {
     localStorage.setItem('viewdRatings', JSON.stringify(this.ratings));
   }
 
+  /**
+   * Returns the array of all the lists.
+   * @returns Array of lists.
+   */
   getLists(): List[] {
     return this.lists;
   }
 
+  /**
+   * Adds a new list to the array of lists.
+   * @param listData Data of the list to add.
+   */
   addList(listData: List) {
     const arrIndex = this.lists.findIndex(list => list.listID === listData.listID);
 
@@ -224,6 +229,10 @@ export class UserInteractionsService {
     }
   }
 
+  /**
+   * Opens the clicked list.
+   * @param listID ID of the list to show.
+   */
   openList(listID: string) {
     const list = this.lists.find(list => list.listID === listID);
 
@@ -233,6 +242,12 @@ export class UserInteractionsService {
     }
   }
 
+  /**
+   * Adds content to a specific list.
+   * @param listID ID of the list.
+   * @param contentToAdd Content to add to the list.
+   * @returns 'ok' if no errors / 'alreadyAdded' is the content is added already / 'listNotFound' if the list to add the content to doesn't exist.
+   */
   addToList(listID: string, contentToAdd: ContentDataModel): 'ok' | 'alreadyAdded' | 'listNotFound' {
     const index = this.lists.findIndex(list => list.listID === listID);
 
@@ -254,6 +269,10 @@ export class UserInteractionsService {
     }
   }
 
+  /**
+   * Removes a list of the array of lists.
+   * @param listID ID of the list to delete.
+   */
   removeList(listID: string) {
     const index = this.lists.findIndex(list => list.listID === listID);
 
@@ -263,6 +282,11 @@ export class UserInteractionsService {
     }
   }
 
+  /**
+   * Removes content from a list.
+   * @param imdbID ID of the content.
+   * @param listID ID of the list.
+   */
   removeFromList(imdbID: string, listID: string) {
     const listIndex = this.lists.findIndex(list => list.listID === listID);
 
@@ -276,6 +300,10 @@ export class UserInteractionsService {
     }
   }
 
+  /**
+   * To save the changes made to a list (title, description, image).
+   * @param editedList List that has been edited.
+   */
   editList(editedList: List) {
     const listIndex = this.lists.findIndex(list => list.listID === editedList.listID);
 

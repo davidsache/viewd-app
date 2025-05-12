@@ -4,6 +4,8 @@ import { OmdbApiService } from '../../services/omdb-api.service';
 import { DarkModeService } from '../../services/dark-mode.service';
 import { DatePipe } from '@angular/common';
 import { Router } from '@angular/router';
+import { ListsService } from '../../services/lists-modal.service';
+import { ContentDataModel } from '../../models/content-data.model';
 
 @Component({
   selector: 'app-result-season',
@@ -13,6 +15,7 @@ import { Router } from '@angular/router';
 })
 export class ResultSeasonComponent implements OnInit {
   private omdbApiService = inject(OmdbApiService);
+  private listsService = inject(ListsService);
   private destroyRef = inject(DestroyRef);
   private router = inject(Router);
   darkModeService = inject(DarkModeService);
@@ -42,5 +45,20 @@ export class ResultSeasonComponent implements OnInit {
    */
   loadEpisode(imdbID: string) {
     this.omdbApiService.getByImdbId(imdbID);
+  }
+
+  /**
+   * Adds an episode to a list.
+   * @param episode Object with the episode data.
+   */
+  addToList(episode: { Episode: string, Released: string, Title: string, imdbID: string, imdbRating: string }) {
+    this.listsService.listVisibility('AddToList', true);
+    this.listsService.contentToAdd({
+      imdbID: episode.imdbID,
+      Poster: 'N/A',
+      Title: episode.Title,
+      Type: 'episode',
+      Year: new Date(episode.Released).getFullYear().toString()
+    });
   }
 }

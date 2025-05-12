@@ -19,9 +19,11 @@
         </div>
       }
       <div class="confirmation-actions">
-        <button type="button" class="btn btn-primary" (click)="showAddListModal()">
-          Crear nueva lista
-        </button>
+        @if (lists !== undefined && lists.length < 1) {
+          <button type="button" class="btn btn-primary" (click)="showAddListModal()">
+            Crear nueva lista
+          </button>
+        }
         <button type="button" class="btn btn-secondary ms-1" (click)="closeAddToListModal()">
           Cerrar
         </button>

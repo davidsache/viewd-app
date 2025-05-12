@@ -12,13 +12,14 @@
       <div>
         @if (list.Content.length > 0) {
           <ol class="text-start">
-            @for (release of list.Content; track release.imdbID) {
+            @for (release of list.Content; track release.imdbID; let i = $index) {
               <li class="releaseList">
                 <div class="my-2">
                   <span class="fs-5 clickable" (click)="loadContent(release.imdbID)">{{ release.Title }} ({{ release.Year }})</span>
                   @if (isFavorite(release.imdbID)) {
                     <button type="button" class="btn ms-3 p-0 show" (click)="removeFav(release.imdbID, release.Title)">
-                      <svg role="img" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" [attr.fill]="darkModeService.svgFill()">
+                      <svg role="img" [attr.aria-labelledby]="'svgListFavoriteRemove' + i" mlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" [attr.fill]="darkModeService.svgFill()">
+                        <title [id]="'svgListFavoriteRemove' + i">Eliminar de favoritos</title>
                         <path d="m480-120-58-52q-101-91-167-157T150-447.5Q111-500 95.5-544T80-634q0-94 63-157t157-63q52 0 99 22t81 
                         62q34-40 81-62t99-22q94 0 157 63t63 157q0 46-15.5 90T810-447.5Q771-395 705-329T538-172l-58 52Z"/>
                       </svg>
@@ -26,7 +27,8 @@
                   }
                   @else {
                     <button type="button" class="btn ms-3 p-0 show" (click)="addFav(release)">
-                      <svg role="img" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" [attr.fill]="darkModeService.svgFill()">
+                      <svg role="img" [attr.aria-labelledby]="'svgListFavoriteAdd' + i" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" [attr.fill]="darkModeService.svgFill()">
+                        <title [id]="'svgListFavoriteAdd' + i">Añadir a favoritos</title>
                         <path d="m480-120-58-52q-101-91-167-157T150-447.5Q111-500 95.5-544T80-634q0-94 63-157t157-63q52 0 99 22t81 62q34-40 81-62t99-22q94 0 157 
                         63t63 157q0 46-15.5 90T810-447.5Q771-395 705-329T538-172l-58 52Zm0-108q96-86 158-147.5t98-107q36-45.5 50-81t14-70.5q0-60-40-100t-100-40q-47 
                         0-87 26.5T518-680h-76q-15-41-55-67.5T300-774q-60 0-100 40t-40 100q0 35 14 70.5t50 81q36 45.5 98 107T480-228Zm0-273Z"/>
@@ -34,7 +36,8 @@
                     </button>
                   }
                   <button type="button" class="btn ms-3 p-0 show" (click)="removeFromList(release.imdbID, release.Title, list.listID)">
-                    <svg role="img" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" [attr.fill]="darkModeService.svgFill()">
+                    <svg role="img" [attr.aria-labelledby]="'svgListRemoveFromList' + i" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" [attr.fill]="darkModeService.svgFill()">
+                      <title [id]="'svgListRemoveFromList' + i">Eliminar de la lista</title>
                       <path d="m376-300 104-104 104 104 56-56-104-104 104-104-56-56-104 104-104-104-56 56 104 104-104 
                       104 56 56Zm-96 180q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 
                       56.5T680-120H280Zm400-600H280v520h400v-520Zm-400 0v520-520Z"/>

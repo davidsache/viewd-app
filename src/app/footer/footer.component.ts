@@ -9,20 +9,11 @@ import { NgClass } from '@angular/common';
   styleUrl: './footer.component.css'
 })
 export class FooterComponent {
-  private darkModeService = inject(DarkModeService);
-
-  buttonIcon = computed(() => 
-    (this.darkModeService.darkModeOn() ? './icons/light_mode.svg' : './icons/dark_mode.svg')
-  );
-
-  githubLogoFill = computed(() => 
-    (this.darkModeService.darkModeOn() ? '#fff' : '#24292f')
-  );
-
-  buttonClass = computed(() => 
-    (this.darkModeService.darkModeOn() ? 'bg-dark' : 'bg-info')
-  );
-
+  darkModeService = inject(DarkModeService);
+  
+  buttonClass = computed(() => this.darkModeService.darkModeOn() ? 'bg-dark' : 'bg-info');
+  githubLogoFill = computed(() => this.darkModeService.darkModeOn() ? '#fff' : '#24292f');
+ 
   /**
    * Toggle the dark mode in the entire site.
    */

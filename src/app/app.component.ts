@@ -35,12 +35,13 @@ export class AppComponent {
   }
 
   constructor() {
-    effect(() => {
-      const darkModeOn = this.darkModeService.darkModeOn();
-      this.changeDarkMode(darkModeOn);
-    });
+    effect(() => this.changeDarkMode(this.darkModeService.darkModeOn()));
   }
 
+  /**
+   * Toggles the dark mode styling on/off.
+   * @param darkModeOn Self explanatory.
+   */
   changeDarkMode(darkModeOn: boolean) {
     if (darkModeOn) {
       this.document.body.classList.remove('backgroundLight');

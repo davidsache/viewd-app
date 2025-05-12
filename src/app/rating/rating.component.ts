@@ -17,9 +17,7 @@ export class RatingComponent implements OnInit {
   @Input() imdbID = '';
   rating!: Rating;
 
-  ratingClass = computed(() => 
-    (this.darkModeService.darkModeOn() ? 'ratingDark' : 'ratingLight')
-  );
+  ratingClass = computed(() => this.darkModeService.darkModeOn() ? 'ratingDark' : 'ratingLight');
 
   ngOnInit() {
     const tempRating = this.userInteractionsService.findRating(this.imdbID);
@@ -32,6 +30,9 @@ export class RatingComponent implements OnInit {
     }
   }
 
+  /**
+   * When the form is submitted (star is clicked), send the rating to the service.
+   */
   onSubmit() {
     this.rating.Rating = this.rating.Rating;
     this.userInteractionsService.addRating(this.rating);

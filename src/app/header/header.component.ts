@@ -1,6 +1,5 @@
 import { Component, computed, inject } from '@angular/core';
 import { DarkModeService } from '../services/dark-mode.service';
-import { NgClass } from '@angular/common';
 import { RouterLink } from '@angular/router';
 
 @Component({
@@ -13,7 +12,5 @@ import { RouterLink } from '@angular/router';
 export class HeaderComponent {
   darkModeService = inject(DarkModeService);
   
-  headerLogo = computed(() => (
-    this.darkModeService.darkModeOn() ? './viewd-logo-wtext.png' : './viewd-logo-btext.png')
-  );
+  headerLogo = computed(() => this.darkModeService.darkModeOn() ? './viewd-logo-wtext.png' : './viewd-logo-btext.png');
 }

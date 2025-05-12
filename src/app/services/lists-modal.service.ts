@@ -22,6 +22,11 @@ export class ListsService {
   private list = new BehaviorSubject<List>({} as any);
   list$ = this.list.asObservable();
 
+  /**
+   * Shows or hide a list.
+   * @param list List to show/hide.
+   * @param visible Show or hide the list.
+   */
   listVisibility(list: 'AddList' | 'AddToList' | 'EditList', visible: boolean) {
     switch (list) {
       case 'AddList':
@@ -38,11 +43,19 @@ export class ListsService {
     }
   }
 
+  /**
+   * Pass the list data to the "edit list" window, and shows it.
+   * @param list Data of the list to be edited.
+   */
   editList(list: List) {
     this.list.next(list);
     this.listVisibility('EditList', true);
   }
 
+  /**
+   * Pass the content to be added and shows the "add to list" window.
+   * @param content Data of the content to be added.
+   */
   contentToAdd(content: ContentDataModel) {
     this.content.next(content);
     this.listVisibility('AddToList', true);

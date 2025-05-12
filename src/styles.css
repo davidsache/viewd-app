@@ -11,12 +11,10 @@ body {
 }
 
 .backgroundLight {
-  background: #CFF4FC;
   background: linear-gradient(90deg, rgba(207, 244, 252, 1) 0%, rgba(140, 234, 255, 1) 100%);
 }
 
 .backgroundDark {
-  background: #032830;
   background: linear-gradient(90deg, rgba(3, 40, 48, 1) 0%, rgba(9, 89, 110, 1) 100%);
 }
 

@@ -21,15 +21,15 @@ export class ResultItemComponent implements OnChanges {
   private router = inject(Router);
   darkModeService = inject(DarkModeService);
   @Input({ required: true }) result!: Result;
-  imagePoster = computed(() => (this.result.Poster !== 'N/A' ? this.result.Poster : './no-image.png'));
   seasonsNumber?: number[];
   tab: 'cast' | 'details' | 'off' = 'off';
   isFavoriteAlready = false;
   addedToWatched = false;
 
-  svgFillWatched = computed(() => (this.darkModeService.darkModeOn() ? '#3cb371' : '#32cd32'));
-  svgFillFavorite = computed(() => (this.darkModeService.darkModeOn() ? '#ff0000' : '#d10000'));
-  svgFillAddToList = computed(() => (this.darkModeService.darkModeOn() ? '#007bd1' : '#1e90ff'));
+  imagePoster = computed(() => this.result.Poster !== 'N/A' ? this.result.Poster : './no-image.png');
+  svgFillWatched = computed(() => this.darkModeService.darkModeOn() ? '#3cb371' : '#32cd32');
+  svgFillFavorite = computed(() => this.darkModeService.darkModeOn() ? '#ff0000' : '#d10000');
+  svgFillAddToList = computed(() => this.darkModeService.darkModeOn() ? '#007bd1' : '#1e90ff');
 
   ngOnInit() {
     const subscription = this.omdbApiService.resultData$

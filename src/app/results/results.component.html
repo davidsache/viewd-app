@@ -23,14 +23,14 @@
     @if (shouldHavePages()) {
       <div class="text-body text-center py-3">
         <button type="button" class="btn btn-secondary bg-primary-subtle mx-2" (click)="navigateToPage('first')">
-          <svg role="img" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" [attr.fill]="darkModeService.svgFill()">
-            <title>Primera página</title>
+          <svg role="img" aria-labelledby="svgResultsFirstPage" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" [attr.fill]="darkModeService.svgFill()">
+            <title id="svgResultsFirstPage">Primera página</title>
             <path d="M440-240 200-480l240-240 56 56-183 184 183 184-56 56Zm264 0L464-480l240-240 56 56-183 184 183 184-56 56Z"/>
           </svg>
         </button>
         <button type="button" class="btn btn-secondary bg-primary-subtle" (click)="navigateToPage('prev')">
-          <svg role="img" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" [attr.fill]="darkModeService.svgFill()">
-            <title>Página anterior</title>
+          <svg role="img" aria-labelledby="svgResultsPreviousPage" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" [attr.fill]="darkModeService.svgFill()">
+            <title id="svgResultsPreviousPage">Página anterior</title>
             <path d="M560-240 320-480l240-240 56 56-184 184 184 184-56 56Z"/>
           </svg>
         </button>
@@ -38,14 +38,14 @@
           {{ searchResults.CurrentPage }} / {{ totalPages() }}
         </span>
         <button type="button" class="btn btn-secondary bg-primary-subtle mx-2" (click)="navigateToPage('next')">
-          <svg role="img" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" [attr.fill]="darkModeService.svgFill()">
-            <title>Siguiente página</title>
+          <svg role="img" aria-labelledby="svgResultsNextPage" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" [attr.fill]="darkModeService.svgFill()">
+            <title id="svgResultsNextPage">Siguiente página</title>
             <path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z"/>
           </svg>
         </button>
         <button type="button" class="btn btn-secondary bg-primary-subtle" (click)="navigateToPage('last')">
-          <svg role="img" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" [attr.fill]="darkModeService.svgFill()">
-            <title>Última página</title>
+          <svg role="img" aria-labelledby="svgResultsLastPage" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" [attr.fill]="darkModeService.svgFill()">
+            <title id="svgResultsLastPage">Última página</title>
             <path d="M383-480 200-664l56-56 240 240-240 240-56-56 183-184Zm264 0L464-664l56-56 240 240-240 240-56-56 183-184Z"/>
           </svg>
         </button>
