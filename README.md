@@ -11,4 +11,4 @@ Simple movie logging web app (inspired by Letterboxd) made for practice purposes
 ## How to run locally
 1. Download the project from this GitHub page.
 2. [Node.js](https://nodejs.org) is required in order to run ```npm install```, which will install all the packages the project needs to work.
-3. Once all the packages are installed, ```npm start``` will start the project in "https://localhost:<some port number>".
+3. Once all the packages are installed, ```npm start``` will start the project in "https://localhost:some-port-number".
